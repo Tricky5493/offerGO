@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open /Users/tricky/Desktop/OfferGO/.skills/version-guard/)",
+      "Bash(ls /Users/tricky/Desktop/Claude/)",
+      "Read(//Users/tricky/Desktop/Claude/**)",
+      "Read(//Users/tricky/.claude/**)",
+      "Read(//Users/tricky/**)",
+      "Bash(open /Users/tricky/.workbuddy/skills/self-improving-agent/)",
+      "Bash(mkdir -p ~/.claude/skills)",
+      "Bash(cp -r /Users/tricky/.workbuddy/skills/self-improving-agent ~/.claude/skills/self-improving-agent)",
+      "Bash(cp /Users/tricky/Desktop/OfferGO/OfferGO_V1.81.html /Users/tricky/Desktop/OfferGO/OfferGO_V2.0-beta.html)",
+      "Bash(python3)",
+      "Bash(cp -r /Users/tricky/.workbuddy/skills/impeccable ~/.claude/skills/impeccable)",
+      "Bash(brew --version)",
+      "Bash(brew install *)"
+    ],
+    "additionalDirectories": [
+      "/Users/tricky/Desktop/OfferGO"
+    ]
+  }
+}
