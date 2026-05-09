@@ -6,6 +6,117 @@ Corrections, insights, and knowledge gaps captured during development.
 
 ---
 
+## [LRN-20260509-001] insight
+
+**Logged**: 2026-05-09T14:00:00+08:00
+**Priority**: critical
+**Status**: resolved
+**Area**: frontend
+
+### Summary
+screen-success 显示为 block 但 width=0 height=0，根本原因是 DOM 嵌套错误而非 CSS 问题
+
+### Details
+V2.0-beta 付费成功页点击"立即购买"后显示空白。调试过程：
+
+1. **错误诊断方向**（浪费大量时间）：
+   - 怀疑 CSS `fade-up` 动画导致 `opacity:0`
+   - 怀疑 `show()` 函数的 `style.display` 和 `classList` 冲突
+   - 怀疑 CSS 选择器优先级问题
+   - 添加了各种调试代码、强制样式、测试按钮
+
+2. **关键转折点**：
+   - 添加调试面板显示 `display=block, visibility=visible, opacity=1` 但 `width=0 height=0`
+   - 这说明元素本身显示了，但**没有内容撑开**
+   - 开始检查父元素
+
+3. **根本原因**：
+   - `screen-result` 缺少一个 `</div>` 闭合标签
+   - `screen-success` 被嵌套在 `screen-result` 内部
+   - 当 `goPage('success')` 隐藏 `screen-result` 时，`screen-success` 作为子元素也被隐藏
+   - **父元素不可见，子元素再怎么设置 display 也没用**
+
+4. **验证方法**：
+   - 写 Node.js 脚本分析 div 嵌套深度
+   - 发现 `screen-result` 在 depth=2 打开，`screen-success` 在 depth=3
+   - 确认 `screen-success` 被错误嵌套
+
+### Root Cause Analysis
+- **诊断方向错误**：过度关注 CSS 和 JS 逻辑，忽略了 DOM 结构
+- **调试信息不完整**：一开始只看 `display`，没看 `width/height`
+- **HTML 编辑历史**：可能是某次编辑时误删或漏写 `</div>`
+
+### Key Insight
+当元素 `display=block` 但 `width=0 height=0` 时：
+1. **立即检查父元素的 display 状态**
+2. **用脚本分析 DOM 嵌套**，不要肉眼看
+3. **CSS 问题通常是显式的**，DOM 嵌套问题更隐蔽
+
+### Resolution
+- **Resolved**: 2026-05-09T14:30:00+08:00
+- **Commit**: 57b22ef
+- **Notes**: 在 `screen-success` 之前添加 `</div>` 关闭 `screen-result`，将 `screen-success` 移到 `.wrap` 外面
+
+### Prevention
+```bash
+# 检查 div 平衡
+node -e "
+const html = require('fs').readFileSync('file.html', 'utf8');
+let depth = 0, i = 0;
+while (i < html.length) {
+  if (html.substring(i,i+4) === '<div' && !html.substring(i,html.indexOf('>',i)+1).endsWith('/>')) depth++;
+  if (html.substring(i,i+6) === '</div>') depth--;
+  i++;
+}
+console.log('Final depth:', depth, depth === 0 ? 'BALANCED' : 'UNBALANCED');
+"
+```
+
+### Metadata
+- Source: debugging
+- Related Files: OfferGO_V2.0-beta.html
+- Tags: dom_nesting, hidden_element, parent_visibility, debugging_technique
+- Pattern-Key: dom_structure_before_css
+- Recurrence-Count: 1
+- First-Seen: 2026-05-09
+- Last-Seen: 2026-05-09
+- See Also: LRN-20260508-001
+
+---
+
+## [LRN-20260509-002] best_practice
+
+**Logged**: 2026-05-09T14:10:00+08:00
+**Priority**: high
+**Status**: resolved
+**Area**: frontend
+
+### Summary
+VM 浏览器环境有局限，复杂页面切换可能失败，需要用脚本分析或让用户本地验证
+
+### Details
+在调试 V2.0-beta 成功页问题时：
+1. VM 浏览器多次崩溃、超时、无法渲染
+2. 创建的最小化测试页面能正常工作，但完整页面无法切换
+3. 最终用 Node.js 脚本分析 DOM 结构找到问题
+
+### Key Takeaways
+1. **VM 浏览器不是万能的** - 复杂页面、动态切换可能有渲染问题
+2. **脚本分析比浏览器更可靠** - DOM 结构、CSS 语法、函数定义等
+3. **让用户本地验证** - VM 无法验证时，不要说"完成了"
+
+### Recommended Debugging Workflow
+```
+1. 代码自查（脚本）→ 2. VM 浏览器测试 → 3. 用户本地验证 → 4. 确认完成
+```
+
+### Metadata
+- Source: debugging
+- Tags: vm_browser_limitation, script_analysis, local_verification
+- Pattern-Key: debugging_without_browser
+
+---
+
 ## [LRN-20260506-001] correction
 
 **Logged**: 2026-05-06T11:15:00+08:00
@@ -309,7 +420,7 @@ V1.7 程序直接挂了：函数重复定义 + 真实 API 未调试
 
 **Logged**: 2026-05-08T12:50:00+08:00
 **Priority**: critical
-**Status**: pending
+**Status**: resolved
 **Area**: frontend
 
 ### Summary
@@ -337,21 +448,20 @@ V1.81 付费成功页（screen-success）点击"立即购买"后显示空白：
 - **环境依赖**：VM 浏览器有局限，但没要求用户本地验证
 - **侥幸心理**：以为"代码看起来没问题"就是没问题
 
-### Suggested Action
-1. **强制验证清单**：每次改完必须逐项验证所有 screen
-2. **边界优先**：付费成功页、错误页、空状态等边界情况优先测
-3. **用户验证**：VM 无法验证时，必须让用户本地测试后再说"完成"
-4. **代码审查**：改完后用 grep 检查语法错误、重复标签、未闭合标签
+### Resolution
+- **Resolved**: 2026-05-09T14:30:00+08:00
+- **Commit**: 57b22ef
+- **Notes**: 根本原因是 DOM 嵌套错误（screen-success 被嵌套在 screen-result 内部），详见 LRN-20260509-001
 
 ### Metadata
 - Source: user_feedback
-- Related Files: OfferGO_V1.81.html
+- Related Files: OfferGO_V1.81.html, OfferGO_V2.0-beta.html
 - Tags: success_page_blank, incomplete_validation, recurring_bug
 - Pattern-Key: thorough_validation_checklist
 - Recurrence-Count: 10+
 - First-Seen: 2026-05-06
-- Last-Seen: 2026-05-08
-- See Also: LRN-20260506-001, LRN-20260507-001, LRN-20260507-007
+- Last-Seen: 2026-05-09
+- See Also: LRN-20260506-001, LRN-20260507-001, LRN-20260507-007, LRN-20260509-001
 
 ---
 
