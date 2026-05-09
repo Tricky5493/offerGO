@@ -13,7 +13,11 @@
       "Bash(python3)",
       "Bash(cp -r /Users/tricky/.workbuddy/skills/impeccable ~/.claude/skills/impeccable)",
       "Bash(brew --version)",
-      "Bash(brew install *)"
+      "Bash(brew install *)",
+      "Bash(pkill -f \"brew install node\")",
+      "Bash(rm -f /Users/tricky/Library/Caches/Homebrew/downloads/*.incomplete)",
+      "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh)",
+      "Bash(bash)"
     ],
     "additionalDirectories": [
       "/Users/tricky/Desktop/OfferGO"

@@ -583,7 +583,7 @@ button,label{touch-action:manipulation;}
     </div>
 
     <!-- Upload card -->
-    <div class="upload-card fade-up" style="animation-delay:.12s">
+    <div id="uploadCard" class="upload-card fade-up" style="animation-delay:.12s">
       <div class="upload-header">
         <div class="upload-icon-wrap">
           <svg viewBox="0 0 20 20" fill="none"><path d="M10 13V4M10 4L7 7M10 4L13 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 14V15C3 16.1046 3.89543 17 5 17H15C16.1046 17 17 16.1046 17 15V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -1266,8 +1266,8 @@ var $ = function(id) { return document.getElementById(id); };
 var SCREENS = ['screen-landing', 'screen-loading', 'screen-score', 'screen-optimize', 'screen-result', 'screen-success', 'screen-user'];
 
 function show(id) {
-  SCREENS.forEach(function(s) { var el = $(s); if (el) { el.classList.remove('on'); el.style.display = 'none'; } });
-  var el = $(id); if (el) { el.style.display = 'block'; el.classList.add('on'); }
+  SCREENS.forEach(function(s) { var el = $(s); if (el) el.classList.remove('on'); });
+  var el = $(id); if (el) el.classList.add('on');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1280,10 +1280,10 @@ function goPage(page) {
   if (navHome) navHome.classList.toggle('active', page === 'landing');
   if (navUser) navUser.classList.toggle('active', page === 'user');
 
-  // 隐藏所有页面
+  // 隐藏所有页面 - 只操作 class，不操作 style
   screens.forEach(s => {
     const el = $(s);
-    if (el) { el.classList.remove('on'); el.style.display = 'none'; }
+    if (el) el.classList.remove('on');
   });
 
   // 显示目标页面
@@ -1300,7 +1300,6 @@ function goPage(page) {
 
   const target = $(targetId);
   if (target) {
-    target.style.display = 'block';
     target.classList.add('on');
   }
   window.scrollTo(0, 0);
