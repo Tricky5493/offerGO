@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#F7F8FC">
-<title>OfferGO · 大厂ATS诊断 · V1.8</title>
+<title>OfferGO · 大厂ATS诊断 · V2.0-beta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <!-- PDF.js for PDF parsing -->
@@ -47,7 +47,7 @@ body{font-family:'Geist','PingFang SC','Microsoft YaHei',sans-serif;background:v
 
 /* Animations */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes scaleIn{from{opacity:0;transform:scale(0.92);}to{opacity:1;transform:scale(1);}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
@@ -77,27 +77,27 @@ body{font-family:'Geist','PingFang SC','Microsoft YaHei',sans-serif;background:v
 
 /* ===== HERO CARD ===== */
 .hero-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px 20px;margin-bottom:12px;position:relative;overflow:hidden;border:1px solid var(--border2);}
-.hero-card::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(31,76,204,0.07) 0%,transparent 70%);pointer-events:none;}
-.hero-card::after{content:'';position:absolute;bottom:-30px;left:-30px;width:100px;height:100px;background:radial-gradient(circle,rgba(15,157,88,0.05) 0%,transparent 70%);pointer-events:none;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--success);margin-bottom:12px;}
-.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s ease-in-out infinite;}
+.hero-card::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(31,76,204,0.1) 0%,transparent 70%);pointer-events:none;}
+.hero-card::after{content:'';position:absolute;bottom:-20px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(15,157,88,0.07) 0%,transparent 70%);pointer-events:none;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--success);background:var(--success-light);border-radius:20px;padding:5px 10px;margin-bottom:14px;font-weight:500;}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
 .hero-title{font-size:28px;font-weight:700;color:var(--text1);line-height:1.2;letter-spacing:-0.8px;margin-bottom:10px;}
 .hero-title span{color:var(--primary);}
 .hero-sub{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;}
 .hero-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
 .hero-tag{font-size:12px;color:var(--text2);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;}
-.hero-tag.active{color:var(--primary);background:var(--primary-light);border-color:rgba(31,76,204,0.2);}
+.hero-tag.active{color:var(--primary);background:var(--primary-light);border-color:rgba(31,76,204,0.2);font-weight:500;}
 
 /* ===== STATS ROW ===== */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-.stat-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border2);padding:16px 12px;text-align:center;position:relative;overflow:hidden;}
-.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--primary);transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;}
-.stat-card:hover::after{transform:scaleX(1);}
-.stat-num{font-size:24px;font-weight:700;margin-bottom:2px;position:relative;display:inline-block;}
+.stat-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border2);padding:16px 10px;text-align:center;position:relative;overflow:hidden;transition:all 0.25s;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--primary2));transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease;}
+.stat-card:hover::before{transform:scaleX(1);}
+.stat-num{font-size:22px;font-weight:700;margin-bottom:3px;position:relative;display:inline-block;letter-spacing:-0.5px;}
 .stat-num.blue{color:var(--primary);}
 .stat-num.green{color:var(--success);}
 .stat-num.orange{color:var(--warning);}
-.stat-lbl{font-size:11px;color:var(--text3);}
+.stat-lbl{font-size:10px;color:var(--text3);line-height:1.4;}
 
 /* ===== DEMO BTN ===== */
 .demo-btn-row{padding:0 0 16px;display:flex;align-items:center;gap:8px;}
@@ -108,19 +108,21 @@ body{font-family:'Geist','PingFang SC','Microsoft YaHei',sans-serif;background:v
 /* ===== UPLOAD CARD ===== */
 .upload-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:20px 18px;margin-bottom:12px;}
 .upload-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.upload-icon-wrap{width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.upload-icon-wrap svg{width:20px;height:20px;color:var(--primary);}
+.upload-icon-wrap{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(31,76,204,0.25);}
+.upload-icon-wrap svg{width:20px;height:20px;color:#fff;}
 .upload-header-text .uh-title{font-size:15px;font-weight:600;color:var(--text1);margin-bottom:2px;}
 .upload-header-text .uh-sub{font-size:12px;color:var(--text3);}
-.upload-zone{border:1.5px dashed var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;background:var(--bg);}
-.upload-zone:hover{border-color:var(--primary2);background:#EEF3FF;}
+.upload-zone{border:1.5px dashed var(--border);border-radius:var(--radius);padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;background:var(--bg);}
+.upload-zone:hover{border-color:var(--primary2);background:rgba(31,76,204,0.04);}
 .upload-zone:active{transform:scale(0.99);}
 .upload-zone.drag-over{background:#EEF3FF;border-color:var(--primary2);border-style:solid;}
-.upload-ill{font-size:38px;margin-bottom:8px;animation:float 3s ease-in-out infinite;}
+.upload-ill{width:56px;height:56px;border-radius:16px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;animation:float 3s ease-in-out infinite;}
+.upload-ill svg{width:28px;height:28px;color:var(--primary);}
+.upload-ill-emoji{font-size:38px;margin-bottom:8px;animation:float 3s ease-in-out infinite;}
 .upload-ttl{font-size:15px;font-weight:600;color:var(--text1);margin-bottom:4px;}
 .upload-sub{font-size:12px;color:var(--text3);margin-bottom:12px;}
 .upload-formats{display:flex;justify-content:center;gap:6px;}
-.fmt-tag{font-size:10px;color:var(--text3);background:var(--card);border:1px solid var(--border);border-radius:4px;padding:2px 7px;}
+.fmt-tag{font-size:10px;color:var(--text3);background:var(--card);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-weight:500;}
 input[type=file]{display:none;}
 
 /* ===== PREVIEW ===== */
@@ -159,30 +161,31 @@ input[type=file]{display:none;}
 .btn-primary:disabled{opacity:0.6;cursor:default;transform:none;box-shadow:none;}
 .btn-primary:disabled::after{animation:none;}
 
-.trust-strip{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 0 4px;}
-.trust-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text3);}
-.trust-item svg{width:12px;height:12px;}
+.trust-strip{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 0 4px;}
+.trust-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text3);background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 10px;white-space:nowrap;}
+.trust-item svg{width:12px;height:12px;flex-shrink:0;}
 
 /* ===== LOADING ===== */
 #screen-loading{display:none;}
 #screen-loading.on{display:block;}
-.loading-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:28px 20px;margin-bottom:12px;}
-.loading-spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;position:relative;}
+.loading-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:32px 20px;margin-bottom:12px;position:relative;overflow:hidden;}
+.loading-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary2),#00D4A1);animation:shimmer 2s ease-in-out infinite;}
+.loading-spinner{width:52px;height:52px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;position:relative;}
 .loading-spinner::after{content:'';position:absolute;inset:-6px;border:2px solid transparent;border-top-color:var(--success);border-radius:50%;animation:spin 0.5s linear infinite reverse;}
-.loading-title{font-size:16px;font-weight:600;color:var(--text1);margin-bottom:4px;text-align:center;}
-.loading-sub{font-size:12px;color:var(--text3);margin-bottom:20px;text-align:center;}
+.loading-title{font-size:16px;font-weight:700;color:var(--text1);margin-bottom:4px;text-align:center;}
+.loading-sub{font-size:12px;color:var(--text3);margin-bottom:24px;text-align:center;line-height:1.6;}
 
 /* Company progress bars */
 .company-progress{margin-top:8px;}
-.cp-item{background:var(--bg);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;}
+.cp-item{background:var(--bg);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);}
 .cp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.cp-logo{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;margin-right:8px;}
+.cp-logo{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;margin-right:8px;}
 .cp-name{font-size:13px;font-weight:600;flex:1;}
 .cp-status{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:4px;}
 .cp-status.done{color:var(--success);}
-.cp-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;position:relative;}
+.cp-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;position:relative;}
 .cp-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2));border-radius:3px;width:0%;transition:width 0.5s ease;}
-.cp-fill.done{background:var(--success);}
+.cp-fill.done{background:linear-gradient(90deg,var(--success),#00D4A1);}
 
 /* ===== SCORE ===== */
 #screen-score{display:none;}
@@ -202,62 +205,161 @@ input[type=file]{display:none;}
 #screen-success{display:none;}
 #screen-success.on{display:block;}
 
-/* Success Page Styles */
-.success-hero{background:linear-gradient(135deg,var(--primary) 0%,#4F8EF7 100%);padding:40px 20px;text-align:center;color:#fff;border-radius:0 0 24px 24px;margin-bottom:16px;}
-.success-icon{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px;font-weight:700;}
-.success-title{font-size:24px;font-weight:700;margin-bottom:8px;}
-.success-sub{font-size:14px;opacity:0.9;}
-.success-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:20px;margin-bottom:12px;}
-.success-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
-.success-card-title{font-size:15px;font-weight:600;color:var(--text1);}
-.success-card-actions{display:flex;gap:8px;}
-.btn-download{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:var(--primary);color:#fff;transition:all 0.2s;}
-.btn-download:hover{background:var(--primary2);}
-.btn-download.outline{background:transparent;border:1px solid var(--primary);color:var(--primary);}
-.btn-download.outline:hover{background:var(--primary-light);}
-.success-resume-content{background:var(--bg);border-radius:12px;padding:16px;max-height:500px;overflow-y:auto;}
-.success-resume-content pre{font-size:12px;line-height:1.8;white-space:pre-wrap;color:var(--text1);margin:0;}
-.success-changes{display:flex;flex-direction:column;gap:8px;}
-.success-change-item{display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg);border-radius:8px;}
-.success-change-label{font-size:13px;color:var(--text2);}
-.success-change-val{font-size:13px;font-weight:600;color:var(--success);}
-.success-score-row{display:flex;align-items:center;justify-content:center;gap:16px;padding:20px 0;}
-.success-score-box{text-align:center;}
-.success-score-label{font-size:12px;color:var(--text3);margin-bottom:8px;}
-.success-score-val{font-size:36px;font-weight:700;}
-.success-score-val.before{color:var(--text3);}
-.success-score-val.after{color:var(--success);}
-.success-score-arrow{font-size:24px;color:var(--text3);}
-.success-score-badge{background:linear-gradient(135deg,var(--success) 0%,#00D4A1 100%);color:#fff;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;}
-.success-footer{padding:20px;text-align:center;}
-.success-footer .btn-primary{padding:14px 32px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;}
-.success-footer .btn-primary:hover{background:var(--primary2);transform:translateY(-1px);}
+/* ===== V2.0 SUCCESS PAGE ===== */
+.succ-hero{background:linear-gradient(135deg,var(--primary) 0%,#4F8EF7 100%);padding:44px 20px;text-align:center;color:#fff;border-radius:0 0 28px 28px;margin-bottom:0;}
+.succ-icon-wrap{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+.succ-icon-wrap svg{width:40px;height:40px;color:#fff;}
+.succ-hero-title{font-size:26px;font-weight:700;margin-bottom:8px;letter-spacing:-0.5px;}
+.succ-hero-sub{font-size:14px;opacity:0.9;line-height:1.6;}
+.succ-section{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:20px;margin:12px 0;}
+.succ-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.succ-section-title{font-size:15px;font-weight:600;color:var(--text1);display:flex;align-items:center;gap:8px;}
+.succ-section-icon{width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.succ-actions{display:flex;gap:8px;}
+.succ-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.succ-btn:active{transform:scale(0.97);}
+.succ-btn-primary{background:var(--primary);color:#fff;}
+.succ-btn-primary:active{background:var(--primary-dark);}
+.succ-btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary);}
+.succ-btn-outline:active{background:var(--primary-light);}
+.succ-resume-body{background:var(--bg);border-radius:12px;padding:16px;max-height:420px;overflow-y:auto;}
+.succ-resume-body pre{font-size:12px;line-height:1.8;white-space:pre-wrap;color:var(--text1);margin:0;font-family:inherit;}
+.succ-changes-list{display:flex;flex-direction:column;gap:8px;}
+.succ-change-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg);border-radius:10px;}
+.succ-change-label{font-size:13px;color:var(--text2);}
+.succ-change-val{font-size:13px;font-weight:600;color:var(--success);}
+.succ-score-compare{display:flex;align-items:center;justify-content:center;gap:20px;padding:16px 0 8px;}
+.succ-score-item{text-align:center;}
+.succ-score-lbl{font-size:12px;color:var(--text3);margin-bottom:6px;}
+.succ-score-num{font-size:38px;font-weight:700;letter-spacing:-1px;}
+.succ-score-num.old{color:var(--text3);}
+.succ-score-num.new{color:var(--success);}
+.succ-score-improve{background:linear-gradient(135deg,var(--success),#00D4A1);color:#fff;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:600;white-space:nowrap;}
+.succ-footer-actions{display:flex;gap:12px;padding:16px 0 8px;}
+.succ-footer-actions .suc-btn{padding:14px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;flex:1;}
+.succ-footer-actions .suc-btn:active{transform:scale(0.98);}
+.succ-footer-actions .suc-btn.primary{background:var(--primary);color:#fff;}
+.succ-footer-actions .suc-btn.primary:active{background:var(--primary-dark);}
+.succ-footer-actions .suc-btn.outline{background:var(--card);color:var(--primary);border:1px solid var(--primary);}
+.succ-footer-actions .suc-btn.outline:active{background:var(--primary-light);}
 
-.section-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.section-icon{font-size:18px;}
+/* ===== V2.0 USER CENTER ===== */
+.uc-header{background:var(--card);border-radius:var(--radius-lg);padding:24px 20px;margin-bottom:12px;border:1px solid var(--border2);position:relative;overflow:hidden;}
+.uc-header::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(31,76,204,0.07),transparent 70%);}
+.uc-profile{display:flex;align-items:center;gap:14px;position:relative;}
+.uc-avatar-wrap{position:relative;cursor:pointer;flex-shrink:0;}
+.uc-avatar-img{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid rgba(31,76,204,0.15);}
+.uc-avatar-placeholder{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--primary-light),rgba(31,76,204,0.15));display:flex;align-items:center;justify-content:center;border:2px solid rgba(31,76,204,0.15);}
+.uc-avatar-placeholder svg{width:30px;height:30px;color:var(--primary);}
+.uc-avatar-edit{position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid #fff;}
+.uc-info{flex:1;min-width:0;}
+.uc-name-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.uc-name{font-size:18px;font-weight:700;cursor:pointer;border-bottom:1px dashed transparent;transition:all 0.15s;padding:2px 0;}
+.uc-name:hover{border-color:var(--primary);}
+.uc-name-edit{font-size:12px;color:var(--primary);cursor:pointer;background:none;border:none;padding:2px;font-family:inherit;}
+.uc-name-input{border:none;border-bottom:2px solid var(--primary);font-size:18px;font-weight:700;font-family:inherit;background:transparent;outline:none;width:160px;padding:2px 0;}
+.uc-subtitle{font-size:12px;color:var(--text3);}
+.uc-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.uc-stat-card{text-align:center;padding:16px 8px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);}
+.uc-stat-num{font-size:22px;font-weight:700;color:var(--primary);}
+.uc-stat-lbl{font-size:11px;color:var(--text3);margin-top:4px;}
+.uc-section{margin-bottom:12px;}
+.uc-section-head{display:flex;align-items:center;justify-content:space-between;padding:0 4px 10px;}
+.uc-section-title{font-size:14px;font-weight:600;color:var(--text1);}
+.uc-section-count{font-size:11px;color:var(--text3);}
+.uc-resume-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;}
+.uc-resume-card:active{background:var(--bg);border-color:var(--primary);}
+.uc-resume-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.uc-resume-fname{font-size:14px;font-weight:600;color:var(--text1);}
+.uc-resume-date{font-size:11px;color:var(--text3);}
+.uc-resume-scores{display:flex;gap:16px;font-size:12px;}
+.uc-resume-score-item{display:flex;align-items:center;gap:4px;}
+.uc-resume-score-lbl{color:var(--text3);}
+.uc-resume-score-val{font-weight:600;}
+.uc-resume-score-val.good{color:var(--success);}
+.uc-resume-score-val.warn{color:var(--warning);}
+.uc-resume-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.uc-resume-btn{padding:6px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--text2);font-family:inherit;transition:all 0.15s;}
+.uc-resume-btn:active{background:var(--primary-light);border-color:var(--primary);color:var(--primary);}
+.uc-resume-btn.danger:active{background:var(--accent-light);border-color:var(--accent);color:var(--accent);}
+.uc-order-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;}
+.uc-order-card:active{background:var(--bg);}
+.uc-order-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.uc-order-name{font-size:14px;font-weight:600;}
+.uc-order-amount{font-size:14px;font-weight:700;color:var(--primary);}
+.uc-order-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text3);}
+.uc-order-status{font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;}
+.uc-order-status.success{background:var(--success-light);color:var(--success);}
+.uc-order-status.pending{background:var(--warning-light);color:var(--warning);}
+.uc-empty{text-align:center;padding:32px 20px;color:var(--text3);}
+.uc-empty-icon{font-size:36px;margin-bottom:8px;}
+.uc-empty-text{font-size:13px;}
+.uc-menu-list{background:var(--card);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
+.uc-menu-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;font-family:inherit;width:100%;background:none;text-align:left;}
+.uc-menu-item:last-child{border-bottom:none;}
+.uc-menu-item:active{background:var(--bg);}
+.uc-menu-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.uc-menu-icon svg{width:18px;height:18px;}
+.uc-menu-icon.blue{background:var(--primary-light);}
+.uc-menu-icon.blue svg{color:var(--primary);}
+.uc-menu-icon.orange{background:var(--warning-light);}
+.uc-menu-icon.orange svg{color:var(--warning);}
+.uc-menu-icon.red{background:var(--accent-light);}
+.uc-menu-icon.red svg{color:var(--accent);}
+.uc-menu-text{flex:1;font-size:14px;font-weight:500;}
+.uc-menu-arrow{color:var(--text3);}
+.uc-menu-arrow svg{width:16px;height:16px;}
+.uc-footer{text-align:center;padding:20px;font-size:11px;color:var(--text3);}
+
+/* Detail modal for resume/order detail */
+.uc-detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;justify-content:center;}
+.uc-detail-overlay.on{display:flex;}
+.uc-detail-sheet{background:var(--card);border-radius:var(--radius-lg) var(--radius-lg) 0 0;max-height:80vh;overflow-y:auto;width:100%;max-width:480px;animation:slideUp 0.3s ease-out;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.uc-detail-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto;}
+.uc-detail-header{display:flex;align-items:center;justify-content:space-between;padding:4px 20px 16px;}
+.uc-detail-title{font-size:16px;font-weight:600;}
+.uc-detail-close{width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--text2);line-height:1;}
+.uc-detail-body{padding:0 20px 32px;}
+.uc-detail-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.uc-detail-col{background:var(--bg);border-radius:10px;padding:14px;}
+.uc-detail-col-title{font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text2);}
+.uc-detail-col pre{font-size:11px;line-height:1.7;white-space:pre-wrap;color:var(--text1);margin:0;}
+
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.section-icon{width:32px;height:32px;border-radius:9px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.section-icon svg{width:17px;height:17px;color:var(--primary);}
+.section-icon.green{background:var(--success-light);}
+.section-icon.green svg{color:var(--success);}
+.section-icon.orange{background:var(--warning-light);}
+.section-icon.orange svg{color:var(--warning);}
+.section-icon-emoji{font-size:18px;}
 .section-title{font-size:16px;font-weight:700;color:var(--text1);}
 .section-badge{font-size:11px;color:var(--text3);margin-left:auto;}
 
 /* Overall score card */
 .score-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:20px;margin-bottom:12px;display:flex;align-items:center;gap:18px;position:relative;overflow:hidden;}
-.score-card::before{content:'';position:absolute;top:0;right:0;width:120px;height:120px;background:radial-gradient(circle,rgba(31,76,204,0.05) 0%,transparent 70%);}
+.score-card::before{content:'';position:absolute;top:0;right:0;width:150px;height:150px;background:radial-gradient(circle,rgba(31,76,204,0.06) 0%,transparent 70%);}
+.score-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary2));}
 .score-gauge{position:relative;flex-shrink:0;}
-.score-gauge svg{width:84px;height:84px;}
+.score-gauge svg{width:88px;height:88px;}
 .score-gauge circle{transition:stroke-dashoffset 1.2s cubic-bezier(0.34,1.56,0.64,1);}
 .score-gauge-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.score-num{font-size:28px;font-weight:700;color:var(--primary);animation:countUp 0.6s ease-out;}
+.score-num{font-size:28px;font-weight:700;color:var(--primary);animation:countUp 0.6s ease-out;letter-spacing:-1px;}
 .score-max{font-size:10px;color:var(--text3);}
 .score-info{flex:1;}
-.score-title{font-size:15px;font-weight:600;color:var(--text1);margin-bottom:4px;}
-.score-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:6px;}
-.score-level{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--warning);background:var(--warning-light);border-radius:6px;padding:3px 8px;font-weight:500;}
+.score-title{font-size:15px;font-weight:700;color:var(--text1);margin-bottom:4px;}
+.score-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px;}
+.score-level{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--warning);background:var(--warning-light);border-radius:6px;padding:4px 10px;font-weight:600;border:1px solid rgba(245,166,35,0.2);}
 
 /* Company scores */
 .co-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px;}
-.co-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border2);padding:14px;display:flex;align-items:center;justify-content:space-between;transition:all 0.2s;}
-.co-card:active{transform:scale(0.98);}
+.co-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border2);padding:14px;display:flex;align-items:center;justify-content:space-between;transition:all 0.2s;position:relative;overflow:hidden;}
+.co-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--primary2));transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease;}
+.co-card:active{transform:scale(0.97);}
+.co-card:hover::before{transform:scaleX(1);}
 .co-left{display:flex;align-items:center;gap:10px;}
-.co-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.co-logo{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;letter-spacing:-0.5px;}
 .co-logo.mt{background:#FFCC00;color:#7A4A00;}
 .co-logo.ali{background:#FF6600;color:#fff;}
 .co-logo.tc{background:#0099CC;color:#fff;}
@@ -266,15 +368,16 @@ input[type=file]{display:none;}
 .co-logo.bai{background:#2932E1;color:#fff;}
 .co-name{font-size:13px;font-weight:600;}
 .co-match{font-size:10px;color:var(--text3);margin-top:1px;}
-.co-score{font-size:24px;font-weight:700;}
+.co-score{font-size:24px;font-weight:700;letter-spacing:-1px;}
 .co-score.s-hi{color:var(--success);}
 .co-score.s-md{color:var(--warning);}
 .co-score.s-lo{color:#D14318;}
 
 /* Problems card */
 .prob-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:18px 16px;margin-bottom:12px;}
-.prob-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.prob-icon{font-size:16px;}
+.prob-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.prob-icon{width:32px;height:32px;border-radius:9px;background:var(--warning-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.prob-icon svg{width:17px;height:17px;color:var(--warning);}
 .prob-title{font-size:14px;font-weight:600;}
 .prob-list{list-style:none;}
 .prob-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--border);}
@@ -287,16 +390,18 @@ input[type=file]{display:none;}
 .prob-text strong{color:var(--text1);font-weight:600;}
 
 /* Optimize CTA */
-.opt-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid rgba(31,76,204,0.12);padding:18px 16px;margin-bottom:12px;}
+.opt-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid rgba(31,76,204,0.15);padding:18px 16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.opt-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary2),#7C3AED);}
 .opt-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
-.opt-icon-wrap{width:40px;height:40px;border-radius:10px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.opt-icon-wrap{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.opt-icon-wrap svg{width:22px;height:22px;color:#fff;}
 .opt-title{font-size:15px;font-weight:700;color:var(--text1);margin-bottom:3px;}
 .opt-sub{font-size:12px;color:var(--text2);line-height:1.6;}
-.opt-label{font-size:12px;color:var(--text3);margin-bottom:10px;}
+.opt-label{font-size:12px;color:var(--text3);margin-bottom:10px;font-weight:500;}
 .co-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;}
-.co-pill{font-size:12px;border:1px solid var(--border);border-radius:20px;padding:6px 14px;cursor:pointer;color:var(--text2);background:var(--bg);transition:all 0.2s;-webkit-user-select:none;}
+.co-pill{font-size:12px;border:1px solid var(--border);border-radius:20px;padding:6px 14px;cursor:pointer;color:var(--text2);background:var(--bg);transition:all 0.2s;-webkit-user-select:none;font-weight:500;}
 .co-pill:active{transform:scale(0.96);}
-.co-pill.selected{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
+.co-pill.selected{border-color:var(--primary);color:var(--primary);background:var(--primary-light);font-weight:600;}
 .co-pill-hint{font-size:11px;color:var(--text3);margin-bottom:12px;}
 .co-pill-hint span{color:var(--primary);font-weight:600;}
 
@@ -309,18 +414,19 @@ input[type=file]{display:none;}
 #screen-result.on{display:block;}
 .result-hero-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);padding:28px 20px;margin-bottom:12px;text-align:center;position:relative;overflow:hidden;}
 .result-hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--primary),#4F8EF7,#00D4A1);}
-.result-hero-card::after{content:'';position:absolute;top:20px;right:20px;width:80px;height:80px;background:radial-gradient(circle,rgba(15,157,88,0.08) 0%,transparent 70%);pointer-events:none;}
+.result-hero-card::after{content:'';position:absolute;top:20px;right:20px;width:100px;height:100px;background:radial-gradient(circle,rgba(15,157,88,0.06) 0%,transparent 70%);pointer-events:none;}
 .result-confetti{font-size:44px;margin-bottom:8px;animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);}
 .result-title{font-size:20px;font-weight:700;color:var(--text1);margin-bottom:4px;}
-.result-sub{font-size:13px;color:var(--text2);margin-bottom:18px;}
-.cmp-row{display:flex;align-items:center;justify-content:center;gap:28px;margin-bottom:16px;}
+.result-sub{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.6;}
+.cmp-row{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:16px;}
 .cmp-box{text-align:center;}
-.cmp-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
-.cmp-val{font-size:38px;font-weight:700;}
+.cmp-label{font-size:11px;color:var(--text3);margin-bottom:4px;font-weight:500;}
+.cmp-val{font-size:38px;font-weight:700;letter-spacing:-1px;}
 .cmp-val.before{color:#D14318;}
 .cmp-val.after{color:var(--success);}
-.cmp-arrow{font-size:22px;color:var(--text3);}
-.result-badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--success);background:var(--success-light);border-radius:10px;padding:8px 16px;animation:fadeUp 0.4s ease-out 0.2s both;}
+.cmp-arrow{display:flex;align-items:center;justify-content:center;color:var(--text3);}
+.cmp-arrow svg{width:22px;height:22px;}
+.result-badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--success);background:var(--success-light);border-radius:10px;padding:8px 16px;animation:fadeUp 0.4s ease-out 0.2s both;border:1px solid rgba(15,157,88,0.15);}
 
 /* Compare */
 .compare-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow);border:1px solid var(--border2);margin-bottom:12px;overflow:hidden;}
@@ -352,16 +458,18 @@ input[type=file]{display:none;}
 .diff-val.down{color:#D14318;text-decoration:line-through;}
 
 /* Paywall */
-.paywall-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--border2);padding:18px 16px;margin-bottom:12px;}
-.pay-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.pay-icon{font-size:20px;}
+.paywall-card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--border2);padding:18px 16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.paywall-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FFB800,#FF6B57,#1F4CCC);}
+.pay-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.pay-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#FFB800 0%,#FF8C00 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(255,140,0,0.3);}
+.pay-icon svg{width:20px;height:20px;color:#fff;}
 .pay-title{font-size:14px;font-weight:700;}
 .pay-sub{font-size:12px;color:var(--text3);margin-top:1px;}
 
 .pay-tiers{display:flex;flex-direction:column;gap:8px;}
-.pay-tier{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:var(--radius);padding:14px;border:1px solid var(--border);transition:all 0.2s;}
+.pay-tier{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:var(--radius);padding:14px;border:1.5px solid var(--border);transition:all 0.2s;cursor:pointer;}
 .pay-tier:active{transform:scale(0.99);}
-.pay-tier.featured{border-color:var(--primary);background:var(--primary-light);}
+.pay-tier.featured{border-color:var(--primary);background:var(--primary-light);box-shadow:0 2px 12px rgba(31,76,204,0.1);}
 .pay-tier-left{flex:1;}
 .pay-tier-name{font-size:13px;font-weight:600;margin-bottom:2px;}
 .pay-tier-desc{font-size:11px;color:var(--text3);}
@@ -369,34 +477,13 @@ input[type=file]{display:none;}
 .pay-tier-price{font-size:16px;font-weight:700;color:var(--primary);}
 .pay-tier-price small{font-size:11px;font-weight:400;color:var(--text3);}
 .pay-tier-hot{font-size:10px;color:var(--accent);font-weight:600;margin-bottom:2px;}
-.btn-pay{background:var(--primary);border:none;border-radius:var(--radius-sm);padding:8px 16px;font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.btn-pay{background:var(--primary);border:none;border-radius:var(--radius-sm);padding:8px 16px;font-size:12px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all 0.2s;}
 .btn-pay:active{transform:scale(0.96);}
-.pay-tier:not(.featured) .btn-pay{background:transparent;border:1px solid var(--border);color:var(--text2);}
+.pay-tier:not(.featured) .btn-pay{background:transparent;border:1.5px solid var(--border);color:var(--text2);}
 
 .reset-btn{text-align:center;margin-top:4px;}
 .reset-btn button{background:none;border:none;font-size:13px;color:var(--text3);cursor:pointer;padding:8px;font-family:inherit;}
 .reset-btn button:active{color:var(--primary);}
-
-/* User Center */
-.user-screen{padding-bottom:100px;}
-.user-header{background:var(--card);border-radius:12px;padding:20px;margin-bottom:12px;border:1px solid var(--border);}
-.user-profile{display:flex;align-items:center;gap:14px;}
-.user-avatar{width:56px;height:56px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:24px;}
-.user-info{flex:1;}
-.user-name{font-size:17px;font-weight:700;margin-bottom:4px;}
-.user-level{font-size:12px;color:var(--text3);}
-.user-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
-.stat-item{text-align:center;padding:12px;background:var(--card);border-radius:8px;border:1px solid var(--border);}
-.stat-num{font-size:20px;font-weight:700;color:var(--primary);}
-.stat-label{font-size:11px;color:var(--text3);margin-top:4px;}
-.menu-list{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
-.menu-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
-.menu-item:last-child{border-bottom:none;}
-.menu-item:active{background:var(--bg);}
-.menu-icon{font-size:18px;width:24px;text-align:center;}
-.menu-text{flex:1;font-size:14px;}
-.menu-arrow{font-size:14px;color:var(--text3);}
-.user-footer{text-align:center;padding:20px;font-size:11px;color:var(--text3);}
 
 footer{text-align:center;padding:16px 0 8px;font-size:11px;color:var(--text3);}
 
@@ -408,16 +495,20 @@ footer{text-align:center;padding:16px 0 8px;font-size:11px;color:var(--text3);}
 .back-btn svg{width:18px;height:18px;color:var(--text2);transition:color 0.2s;}
 
 /* Bottom Navigation */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:var(--card);border-top:1px solid var(--border);padding:8px 0 calc(8px + var(--safe-bot));display:flex;justify-content:space-around;z-index:100;}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 24px;cursor:pointer;color:var(--text3);transition:all 0.2s;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:8px 0 calc(8px + var(--safe-bot));display:flex;justify-content:space-around;z-index:100;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 32px;cursor:pointer;color:var(--text3);transition:all 0.2s;}
 .nav-item.active{color:var(--primary);}
+.nav-item.active .nav-icon-wrap{background:var(--primary-light);}
+.nav-icon-wrap{width:44px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all 0.2s;}
+.nav-icon-wrap svg{width:20px;height:20px;}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:0.3px;}
 .nav-icon{font-size:20px;}
-.nav-label{font-size:10px;font-weight:500;}
 
 /* Coming Soon Section */
 .coming-soon-section{background:var(--card);border-radius:12px;padding:16px;margin-top:12px;border:1px solid var(--border);}
 .coming-soon-header{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:12px;}
-.coming-soon-header::before{content:'🔒';font-size:14px;}
+.coming-soon-lock{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;}
+.coming-soon-lock svg{width:15px;height:15px;color:var(--text3);}
 .coming-soon-divider{height:1px;background:var(--border);margin:0 -16px 12px;}
 .coming-soon-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
 .coming-soon-item{aspect-ratio:1;border-radius:8px;border:1.5px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:0.5;transition:all 0.25s;cursor:pointer;}
@@ -492,7 +583,7 @@ button,label{touch-action:manipulation;}
     </div>
 
     <!-- Upload card -->
-    <div class="upload-card fade-up" style="animation-delay:.12s">
+    <div id="uploadCard" class="upload-card fade-up" style="animation-delay:.12s">
       <div class="upload-header">
         <div class="upload-icon-wrap">
           <svg viewBox="0 0 20 20" fill="none"><path d="M10 13V4M10 4L7 7M10 4L13 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 14V15C3 16.1046 3.89543 17 5 17H15C16.1046 17 17 16.1046 17 15V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -503,7 +594,12 @@ button,label{touch-action:manipulation;}
         </div>
       </div>
       <div class="upload-zone" id="uploadZone">
-        <div class="upload-ill">📄</div>
+        <div class="upload-ill">
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 18V8M14 8L10 12M14 8L18 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 19V21C5 22.1046 5.89543 23 7 23H21C22.1046 23 23 22.1046 23 21V19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div class="upload-ttl">点击或拖拽上传</div>
         <div class="upload-sub">支持 PDF、Word、图片格式</div>
         <div class="upload-formats">
@@ -525,7 +621,9 @@ button,label{touch-action:manipulation;}
     <div class="preview-card" id="previewCard">
       <div class="preview-header">
         <div class="preview-title-row">
-          <span class="preview-title-icon">📄</span>
+          <span class="preview-title-icon" style="width:28px;height:28px;background:var(--primary-light);border-radius:7px;display:flex;align-items:center;justify-content:center;">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 2C3 1.44772 3.44772 1 4 1H8.58579C8.851 1 9.10536 1.10536 9.29289 1.29289L11.7071 3.70711C11.8946 3.89464 12 4.149 12 4.41421V13C12 13.5523 11.5523 14 11 14H4C3.44772 14 3 13.5523 3 13V2Z" stroke="var(--primary)" stroke-width="1.2"/><path d="M8 1V4C8 4.55228 8.44772 5 9 5H12" stroke="var(--primary)" stroke-width="1.2"/><path d="M5 8H10M5 10H8" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </span>
           <div>
             <div class="preview-title">简历预览</div>
             <div class="preview-fname" id="previewFname">resume.pdf</div>
@@ -667,7 +765,9 @@ button,label{touch-action:manipulation;}
     <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
   <div class="section-header" style="padding-left:48px;">
-    <span class="section-icon">📋</span>
+    <span class="section-icon">
+      <svg viewBox="0 0 17 17" fill="none"><rect x="2.5" y="1.5" width="12" height="14" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 5.5H12M5 8H12M5 10.5H9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </span>
     <div class="section-title">诊断报告</div>
     <div class="section-badge">2026-05-04</div>
   </div>
@@ -684,19 +784,27 @@ button,label{touch-action:manipulation;}
     <div class="score-info" id="scoreInfo">
       <div class="score-title">综合 ATS 评分</div>
       <div class="score-desc">简历基础信息完整，但关键词覆盖不足，多个大厂匹配度偏低</div>
-      <div class="score-level">⚠️ 待优化 · 有较大提升空间</div>
+      <div class="score-level">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5V6.5M6 8V9" stroke="var(--warning)" stroke-width="1.3" stroke-linecap="round"/><circle cx="6" cy="6" r="5" stroke="var(--warning)" stroke-width="1.2"/></svg>
+        待优化 · 有较大提升空间
+      </div>
     </div>
   </div>
 
   <!-- Company scores -->
-  <div class="section-header"><span class="section-icon">🏢</span><div class="section-title">各厂匹配度</div></div>
+  <div class="section-header"><span class="section-icon green"><svg viewBox="0 0 17 17" fill="none"><path d="M8.5 2L10.5 6.5L15.5 7L12 10.5L13 15.5L8.5 13L4 15.5L5 10.5L1.5 7L6.5 6.5L8.5 2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span><div class="section-title">各厂匹配度</div></div>
   <div class="co-grid fade-up" id="scoreGrid">
     <!-- 动态渲染 -->
   </div>
 
   <!-- 敬请期待：更多大厂 -->
   <div class="coming-soon-section fade-up">
-    <div class="coming-soon-header">更多大厂陆续攻坚中</div>
+    <div class="coming-soon-header">
+      <span class="coming-soon-lock">
+        <svg viewBox="0 0 15 15" fill="none"><rect x="3" y="7" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 7V5C5 3.89543 5.89543 3 7 3H8C9.10457 3 10 3.89543 10 5V7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </span>
+      更多大厂陆续攻坚中
+    </div>
     <div class="coming-soon-divider"></div>
     <div class="coming-soon-grid">
       <div class="coming-soon-item" onclick="alert('我们正在深入研究小红书的ATS筛选逻辑，预计6月上线')">
@@ -717,13 +825,19 @@ button,label{touch-action:manipulation;}
       </div>
     </div>
     <button class="coming-soon-btn" onclick="alert('关注「OfferGO」公众号，新厂上线第一时间通知你')">
-      <span>🔔</span> 上线提醒我
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4.51 1.5 2.5 3.51 2.5 6V8.5L1 10V11H13V10L11.5 8.5V6C11.5 3.51 9.49 1.5 7 1.5ZM7 13C7.83 13 8.5 12.33 8.5 11.5H5.5C5.5 12.33 6.17 13 7 13Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+      上线提醒我
     </button>
   </div>
 
   <!-- Problems -->
   <div class="prob-card fade-up">
-    <div class="prob-header"><span class="prob-icon">⚠️</span><div class="prob-title" id="problemTitle">发现以下问题</div></div>
+    <div class="prob-header">
+      <div class="prob-icon">
+        <svg viewBox="0 0 17 17" fill="none"><path d="M8.5 6V9.5M8.5 11.5V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7.134 2.5L1.402 12.5C0.869 13.333 1.467 14.5 2.402 14.5H14.598C15.533 14.5 16.131 13.333 15.598 12.5L9.866 2.5C9.333 1.667 8.667 1.667 8.134 2.5H7.134Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="prob-title" id="problemTitle">发现以下问题</div>
+    </div>
     <ul class="prob-list" id="problemList">
       <!-- 动态渲染 -->
     </ul>
@@ -732,7 +846,9 @@ button,label{touch-action:manipulation;}
   <!-- Optimize CTA -->
   <div class="opt-card fade-up">
     <div class="opt-top">
-      <div class="opt-icon-wrap">🚀</div>
+      <div class="opt-icon-wrap">
+        <svg viewBox="0 0 22 22" fill="none"><path d="M11 3L13 8.5L19 9L15 13L16.5 19L11 16L5.5 19L7 13L3 9L9 8.5L11 3Z" stroke="white" stroke-width="1.6" stroke-linejoin="round" fill="rgba(255,255,255,0.2)"/></svg>
+      </div>
       <div>
         <div class="opt-title">AI 一键精准优化</div>
         <div class="opt-sub">针对不同大厂 ATS 规则，深度改写关键词与描述，单次优化可提升 20–50分</div>
@@ -824,15 +940,18 @@ button,label{touch-action:manipulation;}
     <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
   <div class="result-hero-card scale-in">
-    <div class="result-confetti">🎉</div>
+    <div class="result-confetti" style="font-size:44px;margin-bottom:8px;animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1);">🎉</div>
     <div class="result-title">简历已优化完成</div>
     <div class="result-sub" id="resultTargetName">针对字节跳动 ATS 规则精准改写，关键词覆盖率大幅提升</div>
     <div class="cmp-row">
       <div class="cmp-box"><div class="cmp-label">优化前</div><div class="cmp-val before" id="resultBeforeScore">34</div></div>
-      <div class="cmp-arrow">→</div>
+      <div class="cmp-arrow"><svg viewBox="0 0 22 22" fill="none"><path d="M5 11H17M17 11L12 6M17 11L12 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="cmp-box"><div class="cmp-label">优化后</div><div class="cmp-val after" id="resultAfterScore">85</div></div>
     </div>
-    <div class="result-badge" id="resultBadge">⬆ 提升 +51分 · 进入 TOP 10% 候选人</div>
+    <div class="result-badge" id="resultBadge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2L7 12M7 2L4 5M7 2L10 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      提升 +51分 · 进入 TOP 10% 候选人
+    </div>
   </div>
 
   <!-- Compare -->
@@ -846,7 +965,12 @@ button,label{touch-action:manipulation;}
       </div>
       <div class="compare-tabs">
         <div class="ctab" id="tabBefore" onclick="switchTab('before')">优化前版本</div>
-        <div class="ctab on-before" id="tabAfter" onclick="switchTab('after')">✨ 优化后版本</div>
+        <div class="ctab on-before" id="tabAfter" onclick="switchTab('after')">
+          <span style="display:inline-flex;align-items:center;gap:4px;">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5L4.5 8L9 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            优化后版本
+          </span>
+        </div>
       </div>
     </div>
     <div class="cp-content" style="position:relative;">
@@ -871,11 +995,14 @@ button,label{touch-action:manipulation;}
         </div>
       </div>
   </div>
+  </div>
 
   <!-- Paywall -->
   <div class="paywall-card fade-up">
     <div class="pay-header">
-      <div class="pay-icon">⭐</div>
+      <div class="pay-icon">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L12.5 7.5L18.5 8L14.5 12L15.5 18L10 15L4.5 18L5.5 12L1.5 8L7.5 7.5L10 2Z" stroke="white" stroke-width="1.5" stroke-linejoin="round" fill="rgba(255,255,255,0.3)"/></svg>
+      </div>
       <div>
         <div class="pay-title">解锁完整优化报告</div>
         <div class="pay-sub">包含 6 大厂详细评分 + 专属关键词包</div>
@@ -889,7 +1016,7 @@ button,label{touch-action:manipulation;}
         </div>
         <div class="pay-tier-right">
           <div class="pay-tier-price">¥9.9<small>/次</small></div>
-          <button class="btn-pay" onclick="tip()">立即购买</button>
+          <button class="btn-pay" onclick="tip('single')">立即购买</button>
         </div>
       </div>
       <div class="pay-tier featured">
@@ -900,7 +1027,7 @@ button,label{touch-action:manipulation;}
         </div>
         <div class="pay-tier-right">
           <div class="pay-tier-price">¥19.9<small>/3次</small></div>
-          <button class="btn-pay" onclick="tip()">立即购买</button>
+          <button class="btn-pay" onclick="tip('package')">立即购买</button>
         </div>
       </div>
       <div class="pay-tier">
@@ -910,149 +1037,238 @@ button,label{touch-action:manipulation;}
         </div>
         <div class="pay-tier-right">
           <div class="pay-tier-price">¥49.9<small>/年</small></div>
-          <button class="btn-pay" onclick="tip()">开通会员</button>
+          <button class="btn-pay" onclick="tip('vip')">开通会员</button>
         </div>
       </div>
     </div>
   </div>
 
   <div class="reset-btn"><button onclick="resetAll()">← 重新上传简历</button></div>
-</div>
+</div><!-- end screen-result -->
 
-<!-- ===== SCREEN: SUCCESS (付费成功) ===== -->
+<!-- ===== V2.0: SCREEN SUCCESS (付费成功) ===== -->
 <div id="screen-success" style="position:relative;">
-  <div class="success-hero">
-    <div class="success-icon">✓</div>
-    <div class="success-title">支付成功</div>
-    <div class="success-sub">感谢您的信任，完整优化简历已解锁</div>
+  <div class="succ-hero">
+    <div class="succ-icon-wrap">
+      <svg viewBox="0 0 36 36" fill="none"><path d="M8 18L14 24L28 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="succ-hero-title">支付成功</div>
+    <div class="succ-hero-sub">感谢你的信任，完整优化简历已解锁<br>可直接下载或到个人中心查看</div>
   </div>
 
-  <!-- 完整简历展示 -->
-  <div class="success-card fade-up">
-    <div class="success-card-header">
-      <div class="success-card-title">📄 完整优化简历</div>
-      <div class="success-card-actions">
-        <button class="btn-download" onclick="downloadResume('pdf')">📥 下载 PDF</button>
-        <button class="btn-download outline" onclick="downloadResume('word')">📥 下载 Word</button>
+  <!-- 完整优化简历卡片 -->
+  <div class="succ-section" id="succResumeCard">
+    <div class="succ-section-header">
+      <div class="succ-section-title">
+        <span class="succ-section-icon" style="background:var(--primary-light);">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2C3 1.44772 3.44772 1 4 1H8.58579C8.851 1 9.10536 1.10536 9.29289 1.29289L11.7071 3.70711C11.8946 3.89464 12 4.149 12 4.41421V13C12 13.5523 11.5523 14 11 14H4C3.44772 14 3 13.5523 3 13V2Z" stroke="var(--primary)" stroke-width="1.2"/><path d="M8 1V4C8 4.55228 8.44772 5 9 5H12" stroke="var(--primary)" stroke-width="1.2"/><path d="M5 8H10M5 10H8" stroke="var(--primary)" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </span>
+        完整优化简历
+      </div>
+      <div class="succ-actions">
+        <button class="succ-btn succ-btn-primary" onclick="downloadResume('pdf')">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1V9M7 9L4.5 6.5M7 9L9.5 6.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11V12C2 12.5523 2.44772 13 3 13H11C11.5523 13 12 12.5523 12 12V11" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+          下载 PDF
+        </button>
+        <button class="succ-btn succ-btn-outline" onclick="downloadResume('word')">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1V9M7 9L4.5 6.5M7 9L9.5 6.5" stroke="var(--primary)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11V12C2 12.5523 2.44772 13 3 13H11C11.5523 13 12 12.5523 12 12V11" stroke="var(--primary)" stroke-width="1.4" stroke-linecap="round"/></svg>
+          下载 Word
+        </button>
       </div>
     </div>
-    <div class="success-resume-content" id="fullResumeContent">
-      <!-- 完整简历内容 -->
+    <div class="succ-resume-body" id="succFullResume">
+      <!-- JS动态渲染 -->
     </div>
   </div>
 
-  <!-- 改动详情 -->
-  <div class="success-card fade-up">
-    <div class="success-card-title">📊 优化改动详情</div>
-    <div class="success-changes" id="successChangesContent">
-      <!-- 动态渲染 -->
+  <!-- 优化改动摘要 -->
+  <div class="succ-section" id="succChangesCard">
+    <div class="succ-section-title" style="margin-bottom:14px;">
+      <span class="succ-section-icon" style="background:var(--success-light);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 11L5.5 7.5L8 10L13 4" stroke="var(--success)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      优化改动详情
+    </div>
+    <div class="succ-changes-list" id="succChangesList">
+      <!-- JS动态渲染 -->
     </div>
   </div>
 
-  <!-- 评分提升 -->
-  <div class="success-card fade-up">
-    <div class="success-card-title">🎯 ATS 评分提升</div>
-    <div class="success-score-row">
-      <div class="success-score-box">
-        <div class="success-score-label">优化前</div>
-        <div class="success-score-val before" id="successBeforeScore">34</div>
+  <!-- ATS 评分提升 -->
+  <div class="succ-section" id="succScoreCard">
+    <div class="succ-section-title" style="margin-bottom:0;">
+      <span class="succ-section-icon" style="background:var(--primary-light);">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="var(--primary)" stroke-width="1.3"/><path d="M8 5V8L10 10" stroke="var(--primary)" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </span>
+      ATS 评分提升
+    </div>
+    <div class="succ-score-compare">
+      <div class="succ-score-item">
+        <div class="succ-score-lbl">优化前</div>
+        <div class="succ-score-num old" id="succBeforeScore">66</div>
       </div>
-      <div class="success-score-arrow">→</div>
-      <div class="success-score-box">
-        <div class="success-score-label">优化后</div>
-        <div class="success-score-val after" id="successAfterScore">85</div>
+      <div style="display:flex;align-items:center;padding:0 4px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="var(--text3)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <div class="success-score-badge" id="successScoreBadge">+51分</div>
+      <div class="succ-score-item">
+        <div class="succ-score-lbl">优化后</div>
+        <div class="succ-score-num new" id="succAfterScore">85</div>
+      </div>
+      <div class="succ-score-improve" id="succScoreImprove">+19分</div>
     </div>
   </div>
 
-  <div class="success-footer">
-    <button class="btn-primary" onclick="resetAll()">继续优化其他简历</button>
+  <!-- 底部操作 -->
+  <div class="succ-footer-actions">
+    <button class="suc-btn outline" onclick="goPage('user')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 14C2 11.7909 4.68629 10 8 10C11.3137 10 14 11.7909 14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      查看个人中心
+    </button>
+    <button class="suc-btn primary" onclick="resetAll()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 8C13 5.23858 10.7614 3 8 3C5.94968 3 4.18776 4.24346 3.41693 6M3 3V6H6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      继续优化
+    </button>
   </div>
 </div>
 
-<footer>© 2026 OfferGO · 大厂ATS诊断 · AI简历优化专家 · V1.8</footer>
-</div>
+<footer>© 2026 OfferGO · 大厂ATS诊断 · AI简历优化专家 · V2.0-beta</footer>
 
-<!-- ===== USER CENTER SCREEN ===== -->
+<!-- ===== V2.0: USER CENTER SCREEN ===== -->
 <div id="screen-user" class="screen">
-  <div class="user-screen">
-    <!-- User Header -->
-    <div class="user-header">
-      <div class="user-profile">
-        <div class="user-avatar">👤</div>
-        <div class="user-info">
-          <div class="user-name">微信用户</div>
-          <div class="user-level">免费用户 · 剩余1次诊断</div>
+  <div style="padding-bottom:100px;">
+    <!-- 用户信息区 -->
+    <div class="uc-header">
+      <div class="uc-profile">
+        <div class="uc-avatar-wrap" onclick="uploadAvatar()">
+          <img class="uc-avatar-img" id="ucAvatarImg" style="display:none;" alt="头像">
+          <div class="uc-avatar-placeholder" id="ucAvatarPH">
+            <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="10" r="5" stroke="var(--primary)" stroke-width="1.6"/><path d="M4 24C4 19.5817 8.47715 16 14 16C19.5228 16 24 19.5817 24 24" stroke="var(--primary)" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </div>
+          <div class="uc-avatar-edit">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 7.5V9H2.5L7.5 4L6 2.5L1 7.5Z" fill="white"/><path d="M8.5 1.5L9 2L7.5 3.5L6.5 2.5L8 1C8.27614 0.723858 8.72386 0.723858 9 1L8.5 1.5Z" fill="white"/></svg>
+          </div>
+        </div>
+        <div class="uc-info">
+          <div class="uc-name-row">
+            <span class="uc-name" id="ucNickname" onclick="editNickname()">点击设置昵称</span>
+            <button class="uc-name-edit" onclick="editNickname()" title="编辑昵称">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 9V11H3L9.5 4.5L7.5 2.5L1 9Z" stroke="var(--primary)" stroke-width="1.2"/></svg>
+            </button>
+          </div>
+          <div class="uc-subtitle" id="ucSubtitle">免费用户 · 欢迎使用 OfferGO</div>
         </div>
       </div>
     </div>
 
-    <!-- Stats -->
-    <div class="user-stats">
-      <div class="stat-item">
-        <div class="stat-num" id="statDiagnosis">3</div>
-        <div class="stat-label">累计诊断</div>
+    <!-- 数据统计 -->
+    <div class="uc-stats-row">
+      <div class="uc-stat-card">
+        <div class="uc-stat-num" id="ucStatDiagnosis">0</div>
+        <div class="uc-stat-lbl">累计诊断</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-num" id="statOptimize">1</div>
-        <div class="stat-label">累计优化</div>
+      <div class="uc-stat-card">
+        <div class="uc-stat-num" id="ucStatOptimize">0</div>
+        <div class="uc-stat-lbl">累计优化</div>
       </div>
-      <div class="stat-item">
-        <div class="stat-num">6</div>
-        <div class="stat-label">已解锁大厂</div>
-      </div>
-    </div>
-
-    <!-- Menu -->
-    <div class="menu-list">
-      <div class="menu-item" onclick="alert('我的简历功能开发中')">
-        <span class="menu-icon">📄</span>
-        <span class="menu-text">我的简历</span>
-        <span class="menu-arrow">›</span>
-      </div>
-      <div class="menu-item" onclick="alert('我的订单功能开发中')">
-        <span class="menu-icon">💰</span>
-        <span class="menu-text">我的订单</span>
-        <span class="menu-arrow">›</span>
-      </div>
-      <div class="menu-item" onclick="alert('使用帮助：\n1.上传简历\n2.获取ATS评分\n3.选择目标大厂优化\n4.付费解锁完整报告')">
-        <span class="menu-icon">📖</span>
-        <span class="menu-text">使用帮助</span>
-        <span class="menu-arrow">›</span>
-      </div>
-      <div class="menu-item" onclick="alert('隐私协议：您的简历数据仅用于ATS评分分析，不会泄露给第三方')">
-        <span class="menu-icon">🔒</span>
-        <span class="menu-text">隐私协议</span>
-        <span class="menu-arrow">›</span>
+      <div class="uc-stat-card">
+        <div class="uc-stat-num" id="ucStatPaid">0</div>
+        <div class="uc-stat-lbl">付费订单</div>
       </div>
     </div>
 
-    <div class="user-footer">OfferGO V1.5.3</div>
+    <!-- 我的简历 -->
+    <div class="uc-section">
+      <div class="uc-section-head">
+        <div class="uc-section-title">我的简历</div>
+        <div class="uc-section-count" id="ucResumeCount">共 0 份</div>
+      </div>
+      <div id="ucResumeList">
+        <div class="uc-empty">
+          <div class="uc-empty-icon">📄</div>
+          <div class="uc-empty-text">还没有上传简历</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 我的订单 -->
+    <div class="uc-section">
+      <div class="uc-section-head">
+        <div class="uc-section-title">我的订单</div>
+        <div class="uc-section-count" id="ucOrderCount">共 0 笔</div>
+      </div>
+      <div id="ucOrderList">
+        <div class="uc-empty">
+          <div class="uc-empty-icon">🧾</div>
+          <div class="uc-empty-text">还没有购买记录</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 帮助与协议 -->
+    <div class="uc-menu-list">
+      <button class="uc-menu-item" onclick="alert('使用帮助：\n1.上传简历 → 获取ATS评分\n2.选择目标大厂 → AI智能优化\n3.付费解锁完整优化报告\n4.下载优化简历投递')">
+        <span class="uc-menu-icon orange">
+          <svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M9 12.5V12M9 6.5C9 5.67157 9.67157 5 10.5 5C11.3284 5 12 5.67157 12 6.5C12 7.32843 11.3284 8 10.5 8L9 9.5V10.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </span>
+        <span class="uc-menu-text">使用帮助</span>
+        <span class="uc-menu-arrow"><svg viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <button class="uc-menu-item" onclick="alert('隐私协议：\n您的简历数据仅用于ATS评分分析，不会泄露给第三方。所有数据加密存储，随时可以删除。')">
+        <span class="uc-menu-icon red">
+          <svg viewBox="0 0 18 18" fill="none"><path d="M9 2L14 4.5V9C14 12.3 11.8 15.1 9 16C6.2 15.1 4 12.3 4 9V4.5L9 2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 9L8.5 10.5L11 7.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="uc-menu-text">隐私协议</span>
+        <span class="uc-menu-arrow"><svg viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+    </div>
+
+    <div class="uc-footer">OfferGO V2.0-beta</div>
   </div>
 </div>
+</div><!-- end .wrap -->
+
+<!-- Detail overlay for resume/order detail -->
+<div class="uc-detail-overlay" id="ucDetailOverlay" onclick="closeDetail()">
+  <div class="uc-detail-sheet" onclick="event.stopPropagation()">
+    <div class="uc-detail-handle"></div>
+    <div class="uc-detail-header">
+      <div class="uc-detail-title" id="ucDetailTitle">详情</div>
+      <button class="uc-detail-close" onclick="closeDetail()">×</button>
+    </div>
+    <div class="uc-detail-body" id="ucDetailBody">
+      <!-- JS动态渲染 -->
+    </div>
+  </div>
+</div>
+
+<!-- 隐藏的头像上传 input -->
+<input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(this)">
 
 <!-- Bottom Navigation -->
 <div class="bottom-nav">
   <div class="nav-item active" id="navHome" onclick="goPage('landing')">
-    <span class="nav-icon">🏠</span>
+    <div class="nav-icon-wrap">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9.5L10 3L17 9.5V17C17 17.5523 16.5523 18 16 18H12V13H8V18H4C3.44772 18 3 17.5523 3 17V9.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+    </div>
     <span class="nav-label">首页</span>
   </div>
   <div class="nav-item" id="navUser" onclick="goPage('user')">
-    <span class="nav-icon">👤</span>
+    <div class="nav-icon-wrap">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="7" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 17C3 14.2386 6.13401 12 10 12C13.866 12 17 14.2386 17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
     <span class="nav-label">我的</span>
   </div>
 </div>
 
 <script>
-// ===== OfferGO V1.8 - 结果页闭环版 =====
+// ===== OfferGO V2.0-beta - 付费成功页+个人中心完整版 =====
 
 var $ = function(id) { return document.getElementById(id); };
 var SCREENS = ['screen-landing', 'screen-loading', 'screen-score', 'screen-optimize', 'screen-result', 'screen-success', 'screen-user'];
 
 function show(id) {
-  SCREENS.forEach(function(s) { var el = $(s); if (el) { el.classList.remove('on'); el.style.display = 'none'; } });
-  var el = $(id); if (el) { el.style.display = 'block'; el.classList.add('on'); }
+  SCREENS.forEach(function(s) { var el = $(s); if (el) el.classList.remove('on'); });
+  var el = $(id); if (el) el.classList.add('on');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1060,31 +1276,31 @@ function show(id) {
 function goPage(page) {
   const screens = ['screen-landing', 'screen-loading', 'screen-score', 'screen-optimize', 'screen-result', 'screen-success', 'screen-user'];
   const navHome = $('navHome'), navUser = $('navUser');
-  
+
   // 更新导航状态
   if (navHome) navHome.classList.toggle('active', page === 'landing');
   if (navUser) navUser.classList.toggle('active', page === 'user');
-  
-  // 隐藏所有页面
+
+  // 隐藏所有页面 - 只操作 class，不操作 style
   screens.forEach(s => {
     const el = $(s);
-    if (el) { el.classList.remove('on'); el.style.display = 'none'; }
+    if (el) el.classList.remove('on');
   });
-  
+
   // 显示目标页面
-  let targetId = '';
+  var targetId = '';
   switch(page) {
     case 'landing': targetId = 'screen-landing'; break;
     case 'loading': targetId = 'screen-loading'; break;
     case 'score': targetId = 'screen-score'; break;
     case 'optimize': targetId = 'screen-optimize'; break;
     case 'result': targetId = 'screen-result'; break;
-    case 'user': targetId = 'screen-user'; break;
+    case 'success': targetId = 'screen-success'; break;
+    case 'user': targetId = 'screen-user'; renderUserCenter(); break;
   }
-  
+
   const target = $(targetId);
   if (target) {
-    target.style.display = 'block';
     target.classList.add('on');
   }
   window.scrollTo(0, 0);
@@ -1094,10 +1310,47 @@ function goPage(page) {
 var API_BASE = 'https://offergo-api.babel5493.workers.dev'; // Cloudflare Worker URL
 var USE_MOCK = true; // true=使用mock数据（确保产品能跑通），false=调用真实API（需要调试）
 
+// ===== V2.1: 用户标识 + 云端持久化 =====
+function getUserId() {
+  var id = localStorage.getItem('offergo_uid');
+  if (!id) {
+    id = 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('offergo_uid', id);
+  }
+  return id;
+}
+
+async function syncUserData() {
+  var userId = getUserId();
+  try {
+    var [resRes, ordRes, statRes] = await Promise.all([
+      fetch(API_BASE + '/api/user/resumes?userId=' + userId),
+      fetch(API_BASE + '/api/user/orders?userId=' + userId),
+      fetch(API_BASE + '/api/user/stats?userId=' + userId)
+    ]);
+    var [resData, ordData, statData] = await Promise.all([
+      resRes.ok ? resRes.json() : null,
+      ordRes.ok ? ordRes.json() : null,
+      statRes.ok ? statRes.json() : null
+    ]);
+    if (resData && resData.success) AppState.resumes = resData.data;
+    if (ordData && ordData.success) AppState.orders = ordData.data;
+    if (statData && statData.success) AppState.stats = statData.data;
+    saveState();
+    console.log('Synced:', AppState.resumes.length, 'resumes,', AppState.orders.length, 'orders');
+  } catch(e) {
+    console.warn('Cloud sync failed, using localStorage:', e.message);
+  }
+}
+
 // API 调用封装
 async function callAPI(endpoint, data) {
   if (USE_MOCK) {
     return mockAPI(endpoint, data);
+  }
+  // 自动附加 userId
+  if (data && typeof data === 'object' && !data.userId) {
+    data.userId = getUserId();
   }
   
   try {
@@ -1194,6 +1447,21 @@ function mockAPI(endpoint, data) {
           estimated_after_score: 85,
           key_changes: ['被动词汇改为主导性词汇', '新增高并发关键词5个', '补充量化指标3组']
         });
+      } else if (endpoint === '/api/payment/create') {
+        const mockOrderId = 'MOCK_ORDER_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        resolve({
+          orderId: mockOrderId,
+          status: 'pending',
+          paymentUrl: null
+        });
+      } else if (endpoint === '/api/payment/status') {
+        resolve({
+          success: true,
+          data: {
+            orderId: data.orderId,
+            status: 'success'
+          }
+        });
       } else {
         resolve({});
       }
@@ -1204,8 +1472,44 @@ function mockAPI(endpoint, data) {
 var AppState = {
   resumeText: '', resumeFile: null, resumeId: null, jobDirection: 'backend',
   diagnosisData: null, optimizeData: null,
-  selectedCompanies: ['bytedance', 'tencent'], isPaid: false, isLoggedIn: false
+  selectedCompanies: ['bytedance', 'tencent'], isPaid: false, isLoggedIn: false,
+  // V2.0: 持久化数据
+  resumes: [],    // [{id, filename, text, createdAt, diagnosisScore, optimizeScore, diagnosisData, optimizeData}]
+  orders: [],     // [{orderId, sku, skuName, amount, status, resumeId, createdAt, beforeScore, afterScore}]
+  userInfo: { nickname: '', avatar: '' },
+  stats: { diagnosis: 0, optimize: 0, paid: 0 }
 };
+
+// ===== V2.1: 持久化（localStorage + 云端） =====
+function saveState() {
+  var data = {
+    resumes: AppState.resumes,
+    orders: AppState.orders,
+    userInfo: AppState.userInfo,
+    stats: AppState.stats
+  };
+  try { localStorage.setItem('offergo_state', JSON.stringify(data)); } catch(e) {}
+  // 异步同步到云端（fire-and-forget）
+  if (!USE_MOCK && AppState.resumes.length > 0) {
+    var userId = getUserId();
+    fetch(API_BASE + '/api/user/stats?userId=' + userId).catch(function(){});
+  }
+}
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem('offergo_state');
+    if (raw) {
+      var data = JSON.parse(raw);
+      if (data.resumes) AppState.resumes = data.resumes;
+      if (data.orders) AppState.orders = data.orders;
+      if (data.userInfo) AppState.userInfo = data.userInfo;
+      if (data.stats) AppState.stats = data.stats;
+    }
+  } catch(e) { console.warn('loadState failed:', e); }
+}
+loadState(); // 初始化时加载本地数据
+syncUserData(); // 异步从云端同步最新数据
 
 // === 辅助函数 ===
 async function analyzeResume(text, dir) { return callAPI('/api/analyze', { resumeText: text, jobDirection: dir || 'backend' }); }
@@ -1254,9 +1558,22 @@ async function handleFile(file) {
     }
     
     // 保存解析结果
-    AppState.resumeId = 'local_' + Date.now();
+    var rid = 'resume_' + Date.now();
+    AppState.resumeId = rid;
     AppState.resumeText = text;
     AppState.resumeFile = file;
+    // V2.0: 保存到简历列表
+    AppState.resumes.push({
+      id: rid,
+      filename: file.name || '未命名简历',
+      text: text,
+      createdAt: new Date().toISOString(),
+      diagnosisScore: null,
+      optimizeScore: null,
+      diagnosisData: null,
+      optimizeData: null
+    });
+    saveState();
     
     // 显示完整预览
     var previewText = text.length > 2000 ? text.substring(0, 2000) + '\n...' : text;
@@ -1370,7 +1687,19 @@ function reUpload() {
 // === 示例简历 ===
 function loadSampleResume() {
   var t = '张伟\nzhangwei@email.com \u00b7 138-0000-0000 \u00b7 北京\n\n教育背景\n北京大学 计算机科学与技术 硕士 2021.09 - 2024.06\n\n工作经历\n某互联网公司 后端开发工程师 \u00b7 实习 2023.07 - 至今\n负责公司后台系统开发与维护，参与多个项目迭代，使用Java和Spring Boot搭建服务接口。\n\n大学实验室项目 2022.09 - 2023.06\n参与推荐系统研究项目，使用Python进行数据处理和特征工程。\n\n技能\nJava、Python、Spring Boot、MySQL、Redis、Git';
+  AppState.resumeId = 'resume_' + Date.now();
   AppState.resumeText = t;
+  AppState.resumes.push({
+    id: AppState.resumeId,
+    filename: '示例简历_张伟.txt',
+    text: t,
+    createdAt: new Date().toISOString(),
+    diagnosisScore: null,
+    optimizeScore: null,
+    diagnosisData: null,
+    optimizeData: null
+  });
+  saveState();
   $('previewFname').textContent = '示例简历_张伟.txt';
   $('previewCard').classList.add('on');
   $('analyseRow').style.display = 'block';
@@ -1427,7 +1756,15 @@ async function startAnalysis() {
     
     // 保存诊断结果
     AppState.diagnosisData = data;
-    
+    // V2.0: 更新简历记录
+    var ridx = AppState.resumes.findIndex(function(r) { return r.id === AppState.resumeId; });
+    if (ridx >= 0) {
+      AppState.resumes[ridx].diagnosisData = data;
+      AppState.resumes[ridx].diagnosisScore = data.avg_score || 0;
+    }
+    AppState.stats.diagnosis = (AppState.stats.diagnosis || 0) + 1;
+    saveState();
+
     $('loadTitle').textContent = '分析完成！';
     await sleep(400);
     
@@ -1623,7 +1960,15 @@ async function startOptimization() {
     
     // 保存优化结果
     AppState.optimizeData = data;
-    
+    // V2.0: 更新简历记录
+    var ridx2 = AppState.resumes.findIndex(function(r) { return r.id === AppState.resumeId; });
+    if (ridx2 >= 0) {
+      AppState.resumes[ridx2].optimizeData = data;
+      AppState.resumes[ridx2].optimizeScore = data.estimated_after_score || 0;
+    }
+    AppState.stats.optimize = (AppState.stats.optimize || 0) + 1;
+    saveState();
+
     renderResultScreen(data);
     show('screen-result');
     
@@ -1749,55 +2094,201 @@ function switchTab(which) {
 }
 
 // === 付费 ===
-function testSuccessPage() {
-  AppState.optimizeData = { estimated_before_score: 66, estimated_after_score: 85, optimized_text: '<span class="hi-key">主导</span>公司后台系统研发，支撑日活50万+用户', changes_summary: { keywords_added: 5, quant_metrics_added: 3, keyword_density_before: '12%', keyword_density_after: '28%', skills_reordered: true, key_changes: ['新增高并发关键词', '补充量化指标'] } };
-  renderSuccessScreen();
-  show('screen-success');
+var currentOrderId = null;
+var currentSku = null;
+var paymentWindow = null;
+
+async function tip(sku) {
+  currentSku = sku || 'single';
+  
+  // 确保有优化数据
+  if (!AppState.optimizeData) {
+    alert('请先完成简历优化');
+    return;
+  }
+  
+  // 确认购买
+  var confirmMsg = currentSku === 'single' ? '确定购买单次优化（¥9.9）？' : 
+                   currentSku === 'package' ? '确定购买3次特惠包（¥19.9）？' : 
+                   '确定开通全厂通票会员（¥49.9）？';
+  
+  if (!confirm(confirmMsg)) {
+    return;
+  }
+  
+  try {
+    // 创建订单
+    var result = await callAPI('/api/payment/create', {
+      resumeId: AppState.resumeId,
+      sku: currentSku,
+      amount: currentSku === 'single' ? 9.9 : currentSku === 'package' ? 19.9 : 49.9
+    });
+    
+    if (result && result.orderId) {
+      currentOrderId = result.orderId;
+      
+      // 打开模拟支付页面（开发阶段使用）
+      if (result.paymentUrl) {
+        paymentWindow = window.open(result.paymentUrl, 'payment', 'width=400,height=600,scrollbars=yes');
+        
+        if (!paymentWindow || paymentWindow.closed) {
+          alert('请允许弹出窗口以便完成支付');
+          return;
+        }
+      } else {
+        // 生产环境：跳转到真实支付页面（如微信支付）
+        // window.location.href = result.paymentUrl;
+        alert('真实支付接口开发中，当前为演示模式');
+        handlePaymentSuccess(currentOrderId);
+      }
+    }
+  } catch (e) {
+    console.error('Payment error:', e);
+    alert('创建订单失败：' + e.message);
+  }
 }
 
-function tip() {
-  // 模拟支付成功，跳转到成功页
+// V2.0: 支付成功处理 - 写入orders和resumes，持久化
+function handlePaymentSuccess(orderId) {
+  if (paymentWindow && !paymentWindow.closed) {
+    paymentWindow.close();
+  }
+
+  // 确保优化数据存在
+  if (!AppState.optimizeData) {
+    AppState.optimizeData = {
+      estimated_before_score: AppState.diagnosisData ? AppState.diagnosisData.avg_score : 50,
+      estimated_after_score: 85,
+      optimized_text: AppState.resumeText || '优化后的简历内容...',
+      changes_summary: {
+        keywords_added: 3, quant_metrics_added: 2,
+        keyword_density_before: '10%', keyword_density_after: '25%',
+        skills_reordered: true,
+        key_changes: ['关键词优化', '量化指标补充']
+      }
+    };
+  }
+
+  AppState.isPaid = true;
+
+  // V2.0: 写入订单列表
+  var skuNames = { single: '单次 AI 优化', pack3: '3 次特惠包', yearly: '年度会员', package: '3 次特惠包', vip: '全厂通票会员' };
+  var skuPrices = { single: 9.9, pack3: 19.9, yearly: 49.9, package: 19.9, vip: 49.9 };
+  var beforeScore = AppState.optimizeData.estimated_before_score || (AppState.diagnosisData ? AppState.diagnosisData.avg_score : 0);
+  var afterScore = AppState.optimizeData.estimated_after_score || 0;
+
+  var order = {
+    orderId: orderId || ('ORDER_' + Date.now()),
+    sku: currentSku || 'single',
+    skuName: skuNames[currentSku] || '单次 AI 优化',
+    amount: skuPrices[currentSku] || 9.9,
+    status: 'success',
+    resumeId: AppState.resumeId,
+    createdAt: new Date().toISOString(),
+    beforeScore: beforeScore,
+    afterScore: afterScore
+  };
+  AppState.orders.push(order);
+
+  // 更新简历记录
+  var ridx = AppState.resumes.findIndex(function(r) { return r.id === AppState.resumeId; });
+  if (ridx >= 0) {
+    AppState.resumes[ridx].optimizeData = AppState.optimizeData;
+    AppState.resumes[ridx].optimizeScore = afterScore;
+  }
+
+  AppState.stats.paid = (AppState.stats.paid || 0) + 1;
+
+  // 持久化
+  saveState();
+
+  // 渲染并跳转成功页
   renderSuccessScreen();
-  show('screen-success');
+  goPage('success');
 }
 
-// 渲染成功页
+// 监听来自支付窗口的消息
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'PAYMENT_SUCCESS') {
+    handlePaymentSuccess(e.data.orderId);
+  }
+});
+
+// 定时检查支付状态（备用方案）
+var paymentCheckInterval = null;
+
+function startPaymentCheck(orderId) {
+  if (paymentCheckInterval) {
+    clearInterval(paymentCheckInterval);
+  }
+  
+  paymentCheckInterval = setInterval(async function() {
+    try {
+      var response = await fetch(API_BASE + '/api/payment/status?orderId=' + orderId);
+      var json = await response.json();
+      
+      if (json.success && json.data.status === 'success') {
+        clearInterval(paymentCheckInterval);
+        handlePaymentSuccess(orderId);
+      }
+    } catch (e) {
+      console.error('Payment check error:', e);
+    }
+  }, 2000);
+  
+  // 30秒后自动停止检查
+  setTimeout(function() {
+    if (paymentCheckInterval) {
+      clearInterval(paymentCheckInterval);
+    }
+  }, 30000);
+}
+
+// V2.0: 渲染成功页
 function renderSuccessScreen() {
   var data = AppState.optimizeData;
-  var beforeScore = data ? data.estimated_before_score : 34;
-  var afterScore = data ? data.estimated_after_score : 85;
+  var beforeScore = Math.round(data ? (data.estimated_before_score || 50) : 50);
+  var afterScore = Math.round(data ? (data.estimated_after_score || 85) : 85);
   var optimizedText = data ? data.optimized_text : AppState.resumeText || '';
-  
-  // 更新评分
-  $('successBeforeScore').textContent = beforeScore;
-  $('successAfterScore').textContent = afterScore;
-  $('successScoreBadge').textContent = '+' + (afterScore - beforeScore) + '分';
-  
-  // 显示完整简历
-  $('fullResumeContent').innerHTML = '<pre>' + optimizedText + '</pre>';
-  
-  // 显示改动详情
-  if (data && data.changes_summary) {
+
+  // 评分
+  var bScore = $('succBeforeScore');
+  var aScore = $('succAfterScore');
+  var sImprove = $('succScoreImprove');
+  if (bScore) bScore.textContent = beforeScore;
+  if (aScore) aScore.textContent = afterScore;
+  if (sImprove) sImprove.textContent = '+' + (afterScore - beforeScore) + '分';
+
+  // 完整简历
+  var fullEl = $('succFullResume');
+  if (fullEl) {
+    var cleanText = optimizedText.replace(/<[^>]*>/g, '');
+    fullEl.innerHTML = '<pre>' + escapeHtml(cleanText) + '</pre>';
+  }
+
+  // 改动详情
+  var changesEl = $('succChangesList');
+  if (changesEl && data && data.changes_summary) {
     var cs = data.changes_summary;
     var html = '';
     if (cs.keywords_added > 0) {
-      html += '<div class="success-change-item"><span class="success-change-label">新增大厂关键词</span><span class="success-change-val">+' + cs.keywords_added + ' 个</span></div>';
+      html += '<div class="succ-change-row"><span class="succ-change-label">新增大厂关键词</span><span class="succ-change-val">+' + cs.keywords_added + ' 个</span></div>';
     }
     if (cs.quant_metrics_added > 0) {
-      html += '<div class="success-change-item"><span class="success-change-label">补充量化指标</span><span class="success-change-val">+' + cs.quant_metrics_added + ' 组</span></div>';
+      html += '<div class="succ-change-row"><span class="succ-change-label">补充量化指标</span><span class="succ-change-val">+' + cs.quant_metrics_added + ' 组</span></div>';
     }
     if (cs.keyword_density_before) {
-      html += '<div class="success-change-item"><span class="success-change-label">关键词密度</span><span class="success-change-val">' + cs.keyword_density_before + ' → ' + cs.keyword_density_after + '</span></div>';
+      html += '<div class="succ-change-row"><span class="succ-change-label">关键词密度</span><span class="succ-change-val">' + cs.keyword_density_before + ' → ' + cs.keyword_density_after + '</span></div>';
     }
     if (cs.skills_reordered) {
-      html += '<div class="success-change-item"><span class="success-change-label">技能栈排序</span><span class="success-change-val">已优化</span></div>';
+      html += '<div class="succ-change-row"><span class="succ-change-label">技能栈排序</span><span class="succ-change-val">已优化</span></div>';
     }
-    if (cs.key_changes) {
+    if (cs.key_changes && Array.isArray(cs.key_changes)) {
       cs.key_changes.forEach(function(change) {
-        html += '<div class="success-change-item"><span class="success-change-label">' + change + '</span><span class="success-change-val">✓</span></div>';
+        html += '<div class="succ-change-row"><span class="succ-change-label">' + escapeHtml(change) + '</span><span class="succ-change-val">✓</span></div>';
       });
     }
-    $('successChangesContent').innerHTML = html;
+    changesEl.innerHTML = html || '<div style="color:var(--text3);text-align:center;padding:16px;">暂无改动详情</div>';
   }
 }
 
@@ -1811,7 +2302,7 @@ function downloadResume(format) {
     // PDF 下载：使用浏览器打印功能
     var printWindow = window.open('', '_blank');
     printWindow.document.write('<html><head><title>' + filename + '</title>');
-    printWindow.document.write('<style>body{font-family:Arial,sans-serif;padding:40px;line-height:1.8;}pre{white-space:pre-wrap;}</style>');
+    printWindow.document.write('<style>body,pre{font-family:PingFang SC,Microsoft YaHei,SimHei,Arial,sans-serif;padding:40px;line-height:1.8;}pre{white-space:pre-wrap;}</style>');
     printWindow.document.write('</head><body>');
     printWindow.document.write('<pre>' + text.replace(/<[^>]*>/g, '') + '</pre>');
     printWindow.document.write('</body></html>');
@@ -1821,7 +2312,7 @@ function downloadResume(format) {
     // Word 下载：生成 .doc 文件
     var content = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">';
     content += '<head><meta charset="utf-8"><title>' + filename + '</title></head><body>';
-    content += '<pre style="font-family:Arial;font-size:12pt;line-height:1.8;">' + text.replace(/<[^>]*>/g, '') + '</pre>';
+    content += '<pre style="font-family:PingFang SC,Microsoft YaHei,SimHei,Arial,sans-serif;font-size:12pt;line-height:1.8;">' + text.replace(/<[^>]*>/g, '') + '</pre>';
     content += '</body></html>';
     
     var blob = new Blob([content], { type: 'application/msword' });
@@ -1854,9 +2345,276 @@ function resetAll() {
   var pt = $('previewToggleBtn'); if (pt) pt.textContent = '展开';
   for (var i = 1; i <= 6; i++) { var el = $('cpStatus' + i), fl = $('cpFill' + i); if (el) { el.innerHTML = '<span class="cp-status-icon">o</span> 等待中'; el.classList.remove('done'); } if (fl) { fl.style.width = '0%'; fl.classList.remove('done'); } }
   for (var i = 1; i <= 5; i++) { var el = $('optStatus' + i), fl = $('optFill' + i); if (el) { el.innerHTML = '<span>o</span> 等待中'; el.classList.remove('done'); } if (fl) { fl.style.width = '0%'; fl.classList.remove('done'); } }
-  AppState = { resumeText: '', resumeFile: null, jobDirection: 'backend', diagnosisId: null, diagnosisData: null, optimizeData: null, selectedCompanies: ['bytedance', 'tencent'], isPaid: false, isLoggedIn: false };
-  show('screen-landing');
+  // V2.0: 保留历史数据（resumes, orders, userInfo, stats），只重置当前会话
+  var savedResumes = AppState.resumes;
+  var savedOrders = AppState.orders;
+  var savedUserInfo = AppState.userInfo;
+  var savedStats = AppState.stats;
+  AppState = { resumeText: '', resumeFile: null, resumeId: null, jobDirection: 'backend', diagnosisData: null, optimizeData: null, selectedCompanies: ['bytedance', 'tencent'], isPaid: false, isLoggedIn: false, resumes: savedResumes, orders: savedOrders, userInfo: savedUserInfo, stats: savedStats };
+  goPage('landing');
 }
-</script></script>
+
+// ===== V2.0: USER CENTER =====
+function renderUserCenter() {
+  // 渲染头像和昵称
+  var avatarImg = $('ucAvatarImg');
+  var avatarPH = $('ucAvatarPH');
+  if (AppState.userInfo.avatar) {
+    if (avatarImg) { avatarImg.src = AppState.userInfo.avatar; avatarImg.style.display = 'block'; }
+    if (avatarPH) avatarPH.style.display = 'none';
+  } else {
+    if (avatarImg) avatarImg.style.display = 'none';
+    if (avatarPH) avatarPH.style.display = 'flex';
+  }
+  var nickname = $('ucNickname');
+  if (nickname) {
+    nickname.textContent = AppState.userInfo.nickname || '点击设置昵称';
+  }
+  var subEl = $('ucSubtitle');
+  if (subEl) {
+    var paidCount = AppState.stats.paid || 0;
+    subEl.textContent = paidCount > 0 ? '已付费用户 · ' + paidCount + ' 笔订单' : '免费用户 · 欢迎使用 OfferGO';
+  }
+
+  // 渲染统计
+  var sd = $('ucStatDiagnosis');
+  var so = $('ucStatOptimize');
+  var sp = $('ucStatPaid');
+  if (sd) sd.textContent = AppState.stats.diagnosis || 0;
+  if (so) so.textContent = AppState.stats.optimize || 0;
+  if (sp) sp.textContent = AppState.stats.paid || 0;
+
+  // 渲染简历列表
+  renderResumeList();
+  // 渲染订单列表
+  renderOrderList();
+}
+
+function renderResumeList() {
+  var container = $('ucResumeList');
+  var countEl = $('ucResumeCount');
+  if (!container) return;
+
+  var resumes = AppState.resumes || [];
+  if (countEl) countEl.textContent = '共 ' + resumes.length + ' 份';
+
+  if (resumes.length === 0) {
+    container.innerHTML = '<div class="uc-empty"><div class="uc-empty-icon">📄</div><div class="uc-empty-text">还没有上传简历</div></div>';
+    return;
+  }
+
+  var html = '';
+  resumes.slice().reverse().forEach(function(r, i) {
+    var dateStr = r.createdAt ? r.createdAt.slice(0, 10) : '未知时间';
+    var diagScore = r.diagnosisScore ? Math.round(r.diagnosisScore) : null;
+    var optScore = r.optimizeScore ? Math.round(r.optimizeScore) : null;
+    html += '<div class="uc-resume-card" onclick="showResumeDetail(\'' + r.id + '\')">';
+    html += '<div class="uc-resume-card-header">';
+    html += '<span class="uc-resume-fname">' + escapeHtml(r.filename || '未命名简历') + '</span>';
+    html += '<span class="uc-resume-date">' + dateStr + '</span>';
+    html += '</div>';
+    html += '<div class="uc-resume-scores">';
+    html += '<span class="uc-resume-score-item"><span class="uc-resume-score-lbl">诊断：</span><span class="uc-resume-score-val ' + (diagScore && diagScore >= 70 ? 'good' : 'warn') + '">' + (diagScore !== null ? diagScore + '分' : '-') + '</span></span>';
+    html += '<span class="uc-resume-score-item"><span class="uc-resume-score-lbl">优化：</span><span class="uc-resume-score-val ' + (optScore && optScore >= 80 ? 'good' : 'warn') + '">' + (optScore !== null ? optScore + '分' : '-') + '</span></span>';
+    html += '</div>';
+    html += '<div class="uc-resume-actions" onclick="event.stopPropagation()">';
+    html += '<button class="uc-resume-btn" onclick="reOptimizeResume(\'' + r.id + '\')">🔄 重新优化</button>';
+    html += '<button class="uc-resume-btn danger" onclick="deleteResume(\'' + r.id + '\')">🗑 删除</button>';
+    html += '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderOrderList() {
+  var container = $('ucOrderList');
+  var countEl = $('ucOrderCount');
+  if (!container) return;
+
+  var orders = AppState.orders || [];
+  if (countEl) countEl.textContent = '共 ' + orders.length + ' 笔';
+
+  if (orders.length === 0) {
+    container.innerHTML = '<div class="uc-empty"><div class="uc-empty-icon">🧾</div><div class="uc-empty-text">还没有购买记录</div></div>';
+    return;
+  }
+
+  var html = '';
+  orders.slice().reverse().forEach(function(o) {
+    var dateStr = o.createdAt ? o.createdAt.slice(0, 10) : '未知时间';
+    html += '<div class="uc-order-card" onclick="showOrderDetail(\'' + o.orderId + '\')">';
+    html += '<div class="uc-order-header">';
+    html += '<span class="uc-order-name">' + escapeHtml(o.skuName || '订单') + '</span>';
+    html += '<span class="uc-order-amount">¥' + (o.amount || 0).toFixed(1) + '</span>';
+    html += '</div>';
+    html += '<div class="uc-order-meta">';
+    html += '<span>' + dateStr + '</span>';
+    html += '<span class="uc-order-status ' + (o.status || 'pending') + '">' + (o.status === 'success' ? '已完成' : '处理中') + '</span>';
+    html += '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// 简历详情弹窗
+function showResumeDetail(resumeId) {
+  var resume = (AppState.resumes || []).find(function(r) { return r.id === resumeId; });
+  if (!resume) return;
+
+  var overlay = $('ucDetailOverlay');
+  var title = $('ucDetailTitle');
+  var body = $('ucDetailBody');
+  if (!overlay || !body) return;
+
+  if (title) title.textContent = resume.filename || '简历详情';
+
+  var originalText = resume.text || '';
+  var optimizedText = (resume.optimizeData && resume.optimizeData.optimized_text) ? resume.optimizeData.optimized_text.replace(/<[^>]*>/g, '') : '';
+  var diagScore = resume.diagnosisScore ? Math.round(resume.diagnosisScore) : '-';
+  var optScore = resume.optimizeScore ? Math.round(resume.optimizeScore) : '-';
+
+  var html = '<div style="margin-bottom:16px;">';
+  html += '<div style="font-size:13px;color:var(--text2);margin-bottom:8px;">诊断评分：<b>' + diagScore + '分</b> | 优化评分：<b>' + optScore + '分</b></div>';
+  html += '</div>';
+  html += '<div class="uc-detail-compare">';
+  html += '<div class="uc-detail-col"><div class="uc-detail-col-title">原始简历</div><pre>' + escapeHtml(originalText.substring(0, 1500)) + (originalText.length > 1500 ? '\n...' : '') + '</pre></div>';
+  html += '<div class="uc-detail-col"><div class="uc-detail-col-title">优化后简历</div><pre>' + escapeHtml(optimizedText.substring(0, 1500) || '暂未优化') + (optimizedText.length > 1500 ? '\n...' : '') + '</pre></div>';
+  html += '</div>';
+
+  body.innerHTML = html;
+  overlay.classList.add('on');
+}
+
+// 订单详情弹窗
+function showOrderDetail(orderId) {
+  var order = (AppState.orders || []).find(function(o) { return o.orderId === orderId; });
+  if (!order) return;
+
+  var overlay = $('ucDetailOverlay');
+  var title = $('ucDetailTitle');
+  var body = $('ucDetailBody');
+  if (!overlay || !body) return;
+
+  if (title) title.textContent = order.skuName || '订单详情';
+
+  var dateStr = order.createdAt ? order.createdAt.slice(0, 10) : '未知';
+  var beforeScore = order.beforeScore || '-';
+  var afterScore = order.afterScore || '-';
+
+  var html = '<div style="background:var(--bg);border-radius:10px;padding:16px;margin-bottom:12px;">';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--text2);">商品</span><span style="font-weight:600;">' + escapeHtml(order.skuName || '') + '</span></div>';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--text2);">金额</span><span style="font-weight:700;color:var(--primary);">¥' + (order.amount || 0).toFixed(1) + '</span></div>';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--text2);">状态</span><span class="uc-order-status ' + (order.status || 'pending') + '">' + (order.status === 'success' ? '已完成' : '处理中') + '</span></div>';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:var(--text2);">时间</span><span>' + dateStr + '</span></div>';
+  html += '</div>';
+  html += '<div style="text-align:center;padding:16px;background:var(--bg);border-radius:10px;">';
+  html += '<div style="font-size:13px;color:var(--text2);margin-bottom:8px;">评分提升</div>';
+  html += '<div style="display:flex;align-items:center;justify-content:center;gap:16px;">';
+  html += '<div><div style="font-size:24px;font-weight:700;color:var(--text3);">' + beforeScore + '</div><div style="font-size:11px;color:var(--text3);">优化前</div></div>';
+  html += '<div style="color:var(--success);font-size:20px;">→</div>';
+  html += '<div><div style="font-size:24px;font-weight:700;color:var(--success);">' + afterScore + '</div><div style="font-size:11px;color:var(--text3);">优化后</div></div>';
+  html += '</div></div>';
+
+  body.innerHTML = html;
+  overlay.classList.add('on');
+}
+
+function closeDetail() {
+  var overlay = $('ucDetailOverlay');
+  if (overlay) overlay.classList.remove('on');
+}
+
+// 重新优化简历
+function reOptimizeResume(resumeId) {
+  var resume = (AppState.resumes || []).find(function(r) { return r.id === resumeId; });
+  if (!resume) return;
+  AppState.resumeId = resume.id;
+  AppState.resumeText = resume.text;
+  AppState.resumeFile = null;
+  goPage('landing');
+  // 滚动到上传区域
+  setTimeout(function() {
+    var c = $('previewCard');
+    if (c) {
+      $('previewFname').textContent = resume.filename;
+      c.classList.add('on');
+      $('analyseRow').style.display = 'block';
+      var d = $('resumeDoc');
+      if (d) d.innerHTML = '<pre style="font-size:12px;line-height:1.6;white-space:pre-wrap;">' + escapeHtml(resume.text.substring(0, 2000)) + '</pre>';
+      c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 300);
+}
+
+// 删除简历
+function deleteResume(resumeId) {
+  if (!confirm('确定删除这份简历吗？')) return;
+  var idx = AppState.resumes.findIndex(function(r) { return r.id === resumeId; });
+  if (idx >= 0) {
+    AppState.resumes.splice(idx, 1);
+    saveState();
+    renderResumeList();
+    // 更新统计
+    var sd = $('ucResumeCount');
+    if (sd) sd.textContent = '共 ' + AppState.resumes.length + ' 份';
+  }
+}
+
+// 头像上传
+function uploadAvatar() {
+  $('avatarInput').click();
+}
+
+function handleAvatarUpload(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert('头像文件不能超过 2MB');
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var base64 = e.target.result;
+    AppState.userInfo.avatar = base64;
+    saveState();
+    renderUserCenter();
+  };
+  reader.readAsDataURL(file);
+}
+
+// 昵称编辑
+function editNickname() {
+  var nameEl = $('ucNickname');
+  if (!nameEl) return;
+
+  var currentName = AppState.userInfo.nickname || '';
+  var inputEl = document.createElement('input');
+  inputEl.type = 'text';
+  inputEl.className = 'uc-name-input';
+  inputEl.value = currentName;
+  inputEl.placeholder = '输入昵称';
+  inputEl.maxLength = 20;
+
+  nameEl.parentNode.replaceChild(inputEl, nameEl);
+  inputEl.focus();
+  inputEl.select();
+
+  function saveNickname() {
+    var newName = inputEl.value.trim() || 'OfferGO用户';
+    AppState.userInfo.nickname = newName;
+    saveState();
+    renderUserCenter();
+  }
+
+  inputEl.addEventListener('blur', saveNickname);
+  inputEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      inputEl.blur();
+    }
+  });
+}
+</script>
 </body>
 </html>

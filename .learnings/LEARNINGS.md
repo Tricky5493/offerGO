@@ -530,3 +530,150 @@ VM 环境无法验证时：
 - Last-Seen: 2026-05-08
 
 ---
+
+## [LRN-20260509-003] best_practice
+
+**Logged**: 2026-05-09T17:30:00+08:00
+**Priority**: high
+**Status**: resolved
+**Area**: frontend
+
+### Summary
+Div 不平衡调试：用 Python 分离 HTML/JS 后逐 screen 追踪 depth，精准定位缺失的闭合标签
+
+### Details
+V2.0-beta 整理目录时发现 div 不平衡（328 开 vs 327 闭）。调试过程：
+
+1. **初始误判**：用 `grep -c` 统计含 JS 字符串内的 div，结果 400/399，误导了方向
+2. **关键转折**：用 `re.split(r'<script>', content, maxsplit=1)` 分离 HTML 和 JS，分别统计
+3. **精确定位**：打印每个 screen 起止点的 depth，发现 screen-result 进入 depth=2 退出 depth=3（泄漏 +1）
+4. **根本原因**：`<div class="compare-card fade-up">` 在 line 958 打开，但对应的 `</div>` 缺失
+5. **次要问题**：`</div><!-- end .wrap -->` 位置错误，在 screen-success 之前过早关闭
+
+### Key Insight
+```python
+# 分离 HTML 和 JS 避免字符串内 div 干扰
+parts = re.split(r'<script>', content, maxsplit=1)
+html = parts[0]
+# 逐 screen 追踪 depth
+if 'id="screen-' in line:
+    print(f'depth_in={depth}')
+```
+
+### Resolution
+- **Resolved**: 2026-05-09
+- **Notes**: 在 compare-card 的 cp-content 闭合后补充 `</div>`，将 .wrap 闭合移至 screen-user 之后
+
+### Metadata
+- Source: debugging
+- Related Files: frontend/OfferGO_V2.0-beta.html
+- Tags: div_balance, html_validation, python_debugging, screen_structure
+- Pattern-Key: div_balance_python_check
+- Recurrence-Count: 1
+- First-Seen: 2026-05-09
+- Last-Seen: 2026-05-09
+- See Also: LRN-20260509-001
+
+---
+
+## [LRN-20260510-001] knowledge_gap
+
+**Logged**: 2026-05-10T00:30:00+08:00
+**Priority**: high
+**Status**: resolved
+**Area**: infra
+
+### Summary
+Wrangler CLI v4.90 命令结构大幅变更，旧版 `kv:namespace` 语法已废弃
+
+### Details
+在创建 KV Namespace 时，按照文档使用 `wrangler kv:namespace create` 报错 `Unknown arguments`。v4.90 中命令改为层级结构：
+- 旧：`wrangler kv:namespace create <name>`
+- 新：`wrangler kv namespace create <name>`
+
+涉及 KV 的所有子命令都从冒号分隔改为空格分隔（`namespace`、`key`、`bulk`）。查看帮助用 `wrangler kv --help` 逐级下钻。
+
+### Key Insight
+执行任何 wrangler 命令前先 `wrangler <topic> --help`，不要假设旧语法还兼容。
+
+### Resolution
+- **Resolved**: 2026-05-10
+- **Notes**: KV Namespace 创建成功，binding 配置格式不变
+
+### Metadata
+- Source: error
+- Related Files: wrangler.toml
+- Tags: wrangler, cloudflare, kv, cli, version_migration
+- Pattern-Key: wrangler_v4_cli_syntax
+- Recurrence-Count: 1
+- First-Seen: 2026-05-10
+- Last-Seen: 2026-05-10
+
+---
+
+## [LRN-20260510-002] best_practice
+
+**Logged**: 2026-05-10T01:00:00+08:00
+**Priority**: high
+**Status**: resolved
+**Area**: backend
+
+### Summary
+Cloudflare Worker 数据持久化：从 Map 内存缓存迁移到 KV 存储的最佳实践
+
+### Details
+Worker 以前使用 `Map` 做简历和订单缓存，冷启动数据丢失。迁移到 CF KV 的过程：
+
+1. **创建 Namespace**：生产 + Preview 各一个（`wrangler kv namespace create`）
+2. **数据模型**：`resume:{id}` / `order:{id}` + `user:{userId}:resumes` / `user:{userId}:orders` 索引列表
+3. **TTL 策略**：简历 7 天、订单 30 天（KV 自动过期）
+4. **双写模式**：前端的 localStorage 做离线缓存，后端 KV 做持久化真源
+5. **userId 方案**：前端生成 UUID（`u_时间戳_随机串`）存 localStorage，自动附加到 API 请求
+
+### Key Insight
+KV 是 eventually consistent（最终一致），不适合需要立即一致性的场景。但对简历/订单数据完全够用——写操作低频，读操作也不要求毫秒级同步。
+
+### Metadata
+- Source: implementation
+- Related Files: backend/worker.js, frontend/OfferGO_V2.0-beta.html
+- Tags: cloudflare, kv, persistence, data_model, userId
+- Pattern-Key: worker_kv_migration
+- Recurrence-Count: 1
+- First-Seen: 2026-05-10
+- Last-Seen: 2026-05-10
+
+---
+
+## [LRN-20260510-003] insight
+
+**Logged**: 2026-05-10T12:00:00+08:00
+**Priority**: high
+**Status**: pending
+**Area**: infra
+
+### Summary
+OfferGO 国内部署方案确定：虎皮椒支付 + Cloudflare Worker + ICP备案域名
+
+### Details
+用户的国内可访问部署方案：
+1. **支付**：虎皮椒（Hupijiao）—— 个人开发者最主流的微信/支付宝支付接入方案
+   - 注册 → 实名资料审核（5-10分钟）→ 获取 API 密钥 → 对接 Worker 后端
+   - 替代当前 Mock 支付，实现真实收款
+2. **部署**：自定义域名（需 ICP 备案）+ Cloudflare Worker
+   - workers.dev 域名被墙，绑自定义域名解决
+   - 域名备案据用户反馈是最简单的环节
+3. **架构**：H5 前端 → 自定义域名 → Cloudflare Worker → 虎皮椒支付
+
+### Key Insight
+虎皮椒解决了个人开发者无公司资质接支付的痛点，配合已备案域名 + Cloudflare Worker，是国内用户可访问的最小可行部署方案。
+
+### Suggested Action
+后续实现支付时，在 Worker 后端对接虎皮椒 API，替换当前的 mock 支付流程。
+
+### Metadata
+- Source: user_knowledge_share
+- Tags: deployment, china_accessible, payment, hupijiao, cloudflare_worker, icp_beian
+- Pattern-Key: china_deployment_plan
+- See Also: LRN-20260507-006
+
+---

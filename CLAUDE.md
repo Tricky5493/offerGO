@@ -10,6 +10,16 @@
 - **AI模型**：DeepSeek V3主力，Claude 3.5 Sonnet做付费优化
 - **技术栈**：V1.3 H5原生JS + Cloudflare Worker + Supabase（后续）
 
+## 基础设施须知
+- **workers.dev 域名在国内被墙**，必须绑自定义域名（ICP备案）才能让用户访问
+- **支付方案**：虎皮椒（Hupijiao）—— 个人开发者接入微信/支付宝的首选，无需公司资质
+  - 注册 → 实名审核(5-10min) → 获取 API 密钥 → 对接 Worker 后端
+- **国内访问架构**：H5 前端 → 已备案自定义域名 → Cloudflare Worker → 虎皮椒支付
+- **API Key 走 Cloudflare Secrets**（`wrangler secret put`），不要硬编码
+- **Wrangler CLI v4**命令用空格分隔（`wrangler kv namespace create`），不是冒号
+- **数据持久化用 KV**：`resume:{id}` TTL 7天 / `order:{id}` TTL 30天
+- **用户标识用 UUID**：`u_时间戳_随机串`存localStorage，请求自动附加userId
+
 ## 常见错误（修改后必查清单）
 1. □ 定价是否与PRD一致？不要用旧¥99定价
 2. □ 结果页优化前后是否有简历内容？

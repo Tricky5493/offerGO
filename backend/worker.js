@@ -1,10 +1,13 @@
 /**
  * OfferGO Cloudflare Worker
  * DeepSeek API 代理层 + 简历文件解析
- * 部署：wrangler deploy worker.js --name offergo-api
+ * 部署：wrangler deploy backend/worker.js --name offergo-api
+ *
+ * 环境变量（通过 wrangler secret put 设置）：
+ *   DEEPSEEK_API_KEY — DeepSeek API 密钥
+ * 本地开发：在 backend/.dev.vars 中设置 DEEPSEEK_API_KEY=sk-xxx
  */
 
-const DEEPSEEK_API_KEY = 'sk-0c430c775e454448b08b72bdf39fe319';
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 
 // CORS 头
@@ -14,19 +17,26 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-// 内存缓存（生产环境建议用 KV 或 R2）
-const resumeCache = new Map();
+// ===== KV 持久化存储 =====
+// TTL: 简历数据 7 天，订单数据 30 天
+const RESUME_TTL = 7 * 24 * 3600;
+const ORDER_TTL = 30 * 24 * 3600;
 
-/**
- * 清理过期缓存（在请求处理时检查）
- */
-function cleanExpiredCache() {
-  const now = Date.now();
-  for (const [id, data] of resumeCache.entries()) {
-    if (now - data.createdAt > 60 * 60 * 1000) {
-      resumeCache.delete(id);
-    }
-  }
+async function kvGetJSON(kv, key) {
+  const raw = await kv.get(key);
+  return raw ? JSON.parse(raw) : null;
+}
+
+async function kvPutJSON(kv, key, data, ttl) {
+  await kv.put(key, JSON.stringify(data), { expirationTtl: ttl });
+}
+
+// 追加元素到用户列表
+async function kvAppendToList(kv, listKey, item, ttl) {
+  const raw = await kv.get(listKey);
+  const list = raw ? JSON.parse(raw) : [];
+  list.push(item);
+  await kv.put(listKey, JSON.stringify(list), { expirationTtl: ttl });
 }
 
 /**
@@ -225,12 +235,12 @@ ${resumeText}
 /**
  * 调用 DeepSeek API
  */
-async function callDeepSeek(messages, temperature = 0.1) {
+async function callDeepSeek(messages, apiKey, temperature = 0.1) {
   const response = await fetch(DEEPSEEK_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+      'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
       model: 'deepseek-chat',
@@ -265,38 +275,48 @@ async function callDeepSeek(messages, temperature = 0.1) {
 /**
  * 处理上传请求
  */
-async function handleUpload(request) {
+async function handleUpload(request, kv) {
   try {
-    const { content, filename } = await request.json();
-    
+    const body = await request.json();
+    const { content, filename, userId } = body;
+
     if (!content) {
       return new Response(JSON.stringify({
         error: '缺少文件内容'
       }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
     }
-    
+
     // 解析文件内容
     const text = await parseResumeFile(content, filename || 'resume.txt');
-    
+
     if (!text || text.trim().length < 50) {
       return new Response(JSON.stringify({
         error: '简历内容太短或无法识别，请检查文件格式'
       }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
     }
-    
+
     // 生成唯一 ID
     const resumeId = `resume_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+    const now = Date.now();
+
     // 生成预览
     const previewText = generatePreview(text, 0.3, 800);
-    
-    // 缓存
-    resumeCache.set(resumeId, {
+
+    // 存入 KV
+    const resumeData = {
       text,
       filename: filename || 'resume.txt',
-      createdAt: Date.now()
-    });
-    
+      userId: userId || 'anonymous',
+      createdAt: now
+    };
+    await kvPutJSON(kv, `resume:${resumeId}`, resumeData, RESUME_TTL);
+
+    // 追加到用户简历列表
+    if (userId) {
+      const item = { id: resumeId, filename: resumeData.filename, createdAt: now };
+      await kvAppendToList(kv, `user:${userId}:resumes`, item, RESUME_TTL);
+    }
+
     return new Response(JSON.stringify({
       success: true,
       data: {
@@ -317,15 +337,16 @@ async function handleUpload(request) {
 /**
  * 处理分析请求
  */
-async function handleAnalyze(request) {
+async function handleAnalyze(request, apiKey, kv) {
   const { resumeText, jobDirection, resumeId } = await request.json();
-  
-  // 如果有 resumeId，从缓存获取
+
+  // 如果有 resumeId，从 KV 获取
   let text = resumeText;
-  if (resumeId && resumeCache.has(resumeId)) {
-    text = resumeCache.get(resumeId).text;
+  if (resumeId) {
+    const cached = await kvGetJSON(kv, `resume:${resumeId}`);
+    if (cached) text = cached.text;
   }
-  
+
   if (!text || text.trim().length < 50) {
     return new Response(JSON.stringify({
       error: '简历内容不足，请提供更完整的简历文本（至少50字）'
@@ -334,8 +355,17 @@ async function handleAnalyze(request) {
 
   try {
     const messages = buildAnalyzePrompt(text, jobDirection);
-    const result = await callDeepSeek(messages);
-    
+    const result = await callDeepSeek(messages, apiKey);
+
+    // 保存诊断结果到 KV
+    if (resumeId) {
+      const cached = await kvGetJSON(kv, `resume:${resumeId}`);
+      if (cached) {
+        cached.diagnosisData = result;
+        await kvPutJSON(kv, `resume:${resumeId}`, cached, RESUME_TTL);
+      }
+    }
+
     return new Response(JSON.stringify({
       success: true,
       data: result
@@ -351,15 +381,16 @@ async function handleAnalyze(request) {
 /**
  * 处理优化请求
  */
-async function handleOptimize(request) {
+async function handleOptimize(request, apiKey, kv) {
   const { resumeText, targetCompanies, jobDirection, resumeId } = await request.json();
-  
-  // 如果有 resumeId，从缓存获取
+
+  // 如果有 resumeId，从 KV 获取
   let text = resumeText;
-  if (resumeId && resumeCache.has(resumeId)) {
-    text = resumeCache.get(resumeId).text;
+  if (resumeId) {
+    const cached = await kvGetJSON(kv, `resume:${resumeId}`);
+    if (cached) text = cached.text;
   }
-  
+
   if (!text || text.trim().length < 50) {
     return new Response(JSON.stringify({
       error: '简历内容不足'
@@ -374,8 +405,17 @@ async function handleOptimize(request) {
 
   try {
     const messages = buildOptimizePrompt(text, targetCompanies, jobDirection);
-    const result = await callDeepSeek(messages, 0.3);
-    
+    const result = await callDeepSeek(messages, apiKey, 0.3);
+
+    // 保存优化结果到 KV
+    if (resumeId) {
+      const cached = await kvGetJSON(kv, `resume:${resumeId}`);
+      if (cached) {
+        cached.optimizeData = result;
+        await kvPutJSON(kv, `resume:${resumeId}`, cached, RESUME_TTL);
+      }
+    }
+
     return new Response(JSON.stringify({
       success: true,
       data: result
@@ -388,38 +428,49 @@ async function handleOptimize(request) {
   }
 }
 
-// 订单缓存（生产环境建议用 KV）
-const orderCache = new Map();
+// ===== 订单处理 =====
 
 /**
  * 处理创建订单请求
  */
-async function handleCreateOrder(request) {
+async function handleCreateOrder(request, kv) {
   try {
-    const { resumeId, sku, amount } = await request.json();
-    
+    const { resumeId, sku, amount, userId } = await request.json();
+
     if (!resumeId || !sku) {
       return new Response(JSON.stringify({
         error: '缺少必要参数'
       }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
     }
-    
-    const mockOrderId = `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    orderCache.set(mockOrderId, {
+
+    const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const now = Date.now();
+
+    const orderData = {
+      orderId,
       resumeId,
       sku,
-      amount,
+      amount: amount || 0,
       status: 'pending',
-      createdAt: Date.now()
-    });
-    
+      userId: userId || 'anonymous',
+      createdAt: now
+    };
+
+    // 存入 KV
+    await kvPutJSON(kv, `order:${orderId}`, orderData, ORDER_TTL);
+
+    // 追加到用户订单列表
+    if (userId) {
+      const item = { orderId, sku, amount: orderData.amount, status: 'pending', resumeId, createdAt: now };
+      await kvAppendToList(kv, `user:${userId}:orders`, item, ORDER_TTL);
+    }
+
     return new Response(JSON.stringify({
       success: true,
       data: {
-        orderId: mockOrderId,
+        orderId,
         status: 'pending',
-        paymentUrl: `https://offergo-api.babel5493.workers.dev/payment/simulate?orderId=${mockOrderId}`
+        paymentUrl: `https://offergo-api.babel5493.workers.dev/payment/simulate?orderId=${orderId}`
       }
     }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } });
   } catch (e) {
@@ -433,86 +484,123 @@ async function handleCreateOrder(request) {
 /**
  * 模拟支付成功回调（开发阶段使用）
  */
-async function handleSimulatePayment(request) {
+async function handleSimulatePayment(request, kv) {
   const url = new URL(request.url);
   const orderId = url.searchParams.get('orderId');
-  
-  if (!orderId || !orderCache.has(orderId)) {
-    return new Response(JSON.stringify({
-      error: '订单不存在'
-    }), { status: 404, headers: { 'Content-Type': 'application/json', ...CORS } });
+
+  const order = await kvGetJSON(kv, `order:${orderId}`);
+  if (!order) {
+    return new Response(JSON.stringify({ error: '订单不存在' }), { status: 404, headers: { 'Content-Type': 'application/json', ...CORS } });
   }
-  
-  const order = orderCache.get(orderId);
+
   order.status = 'success';
   order.paidAt = Date.now();
-  
-  return new Response(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>支付成功 - OfferGO</title>
-      <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #F7F8FC; }
-        .card { background: white; border-radius: 16px; padding: 40px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 360px; }
-        .icon { width: 64px; height: 64px; background: #0F9D58; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
-        .icon svg { width: 36px; height: 36px; color: white; }
-        h1 { color: #1F2329; margin: 0 0 12px; font-size: 24px; }
-        p { color: #4E5566; margin: 0 0 24px; line-height: 1.6; }
-        .btn { background: #1F4CCC; color: white; border: none; padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
-      </style>
-    </head>
-    <body>
-      <div class="card">
-        <div class="icon">
-          <svg viewBox="0 0 36 36" fill="none"><path d="M8 18L14 24L28 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h1>支付成功</h1>
-        <p>感谢您的信任，完整优化简历已解锁</p>
-        <a href="javascript:void(0);" class="btn" onclick="window.opener && window.opener.postMessage && window.opener.postMessage({ type: 'PAYMENT_SUCCESS', orderId: '${orderId}' }, '*'); window.close();">返回查看结果</a>
-      </div>
-      <script>
-        setTimeout(function() {
-          window.opener && window.opener.postMessage && window.opener.postMessage({ type: 'PAYMENT_SUCCESS', orderId: '${orderId}' }, '*');
-          window.close();
-        }, 2000);
-      </script>
-    </body>
-    </html>
-  `, { status: 200, headers: { 'Content-Type': 'text/html' } });
+  await kvPutJSON(kv, `order:${orderId}`, order, ORDER_TTL);
+
+  return new Response(`<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>支付成功 - OfferGO</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#F7F8FC;}.card{background:white;border-radius:16px;padding:40px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.1);max-width:360px;}.icon{width:64px;height:64px;background:#0F9D58;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}.icon svg{width:36px;height:36px;color:white;}h1{color:#1F2329;margin:0 0 12px;font-size:24px;}p{color:#4E5566;margin:0 0 24px;line-height:1.6;}.btn{background:#1F4CCC;color:white;border:none;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;}</style></head>
+<body><div class="card"><div class="icon"><svg viewBox="0 0 36 36" fill="none"><path d="M8 18L14 24L28 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h1>支付成功</h1><p>感谢你的信任，完整优化简历已解锁</p><a href="javascript:void(0);" class="btn" onclick="window.opener&&window.opener.postMessage({type:'PAYMENT_SUCCESS',orderId:'${orderId}'},'*');window.close();">返回查看结果</a></div>
+<script>setTimeout(function(){window.opener&&window.opener.postMessage({type:'PAYMENT_SUCCESS',orderId:'${orderId}'},'*');window.close();},2000);</script></body></html>`, { status: 200, headers: { 'Content-Type': 'text/html' } });
 }
 
 /**
  * 处理支付状态查询
  */
-async function handlePaymentStatus(request) {
+async function handlePaymentStatus(request, kv) {
   const url = new URL(request.url);
   const orderId = url.searchParams.get('orderId');
-  
+
   if (!orderId) {
-    return new Response(JSON.stringify({
-      error: '缺少订单号'
-    }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+    return new Response(JSON.stringify({ error: '缺少订单号' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
   }
-  
-  const order = orderCache.get(orderId);
-  
+
+  const order = await kvGetJSON(kv, `order:${orderId}`);
   if (!order) {
-    return new Response(JSON.stringify({
-      orderId,
-      status: 'not_found'
-    }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } });
+    return new Response(JSON.stringify({ orderId, status: 'not_found' }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } });
   }
-  
+
+  return new Response(JSON.stringify({
+    success: true,
+    data: { orderId, status: order.status, resumeId: order.resumeId, sku: order.sku }
+  }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } });
+}
+
+// ===== 用户数据接口 =====
+
+/**
+ * GET /api/user/resumes?userId=xxx
+ * 获取用户的简历列表
+ */
+async function handleUserResumes(request, kv) {
+  const url = new URL(request.url);
+  const userId = url.searchParams.get('userId');
+  if (!userId) {
+    return new Response(JSON.stringify({ error: '缺少 userId' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+  }
+
+  const raw = await kv.get(`user:${userId}:resumes`);
+  const list = raw ? JSON.parse(raw) : [];
+
+  // 补充诊断/优化评分
+  const enriched = await Promise.all(list.map(async (item) => {
+    const data = await kvGetJSON(kv, `resume:${item.id}`);
+    return {
+      ...item,
+      diagnosisScore: data?.diagnosisData?.avg_score || data?.diagnosisData?.overallScore || null,
+      optimizeScore: data?.optimizeData?.estimated_after_score || null
+    };
+  }));
+
+  return new Response(JSON.stringify({ success: true, data: enriched }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } });
+}
+
+/**
+ * GET /api/user/orders?userId=xxx
+ * 获取用户的订单列表
+ */
+async function handleUserOrders(request, kv) {
+  const url = new URL(request.url);
+  const userId = url.searchParams.get('userId');
+  if (!userId) {
+    return new Response(JSON.stringify({ error: '缺少 userId' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+  }
+
+  const raw = await kv.get(`user:${userId}:orders`);
+  const list = raw ? JSON.parse(raw) : [];
+
+  // 补充订单详情
+  const enriched = await Promise.all(list.map(async (item) => {
+    const order = await kvGetJSON(kv, `order:${item.orderId}`);
+    return order || item;
+  }));
+
+  return new Response(JSON.stringify({ success: true, data: enriched }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } });
+}
+
+/**
+ * GET /api/user/stats?userId=xxx
+ * 获取用户的统计数据
+ */
+async function handleUserStats(request, kv) {
+  const url = new URL(request.url);
+  const userId = url.searchParams.get('userId');
+  if (!userId) {
+    return new Response(JSON.stringify({ error: '缺少 userId' }), { status: 400, headers: { 'Content-Type': 'application/json', ...CORS } });
+  }
+
+  const resumesRaw = await kv.get(`user:${userId}:resumes`);
+  const ordersRaw = await kv.get(`user:${userId}:orders`);
+  const resumes = resumesRaw ? JSON.parse(resumesRaw) : [];
+  const orders = ordersRaw ? JSON.parse(ordersRaw) : [];
+
   return new Response(JSON.stringify({
     success: true,
     data: {
-      orderId,
-      status: order.status,
-      resumeId: order.resumeId,
-      sku: order.sku
+      diagnosis: resumes.length,
+      optimize: resumes.filter(r => r.optimizeScore).length,
+      paid: orders.filter(o => o.status === 'success').length
     }
   }), { status: 200, headers: { 'Content-Type': 'application/json', ...CORS } });
 }
@@ -521,35 +609,45 @@ async function handlePaymentStatus(request) {
  * 主入口
  */
 export default {
-  async fetch(request) {
-    // 处理 CORS 预检请求
+  async fetch(request, env) {
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS });
     }
 
-    // 定期清理过期缓存
-    cleanExpiredCache();
-
     const url = new URL(request.url);
     const path = url.pathname;
+    const kv = env.OFFERGO_DATA;
+
+    const apiKey = env.DEEPSEEK_API_KEY;
+    if (!apiKey && (path === '/api/analyze' || path === '/api/optimize')) {
+      return new Response(JSON.stringify({
+        error: 'API Key 未配置，请联系管理员'
+      }), { status: 500, headers: { 'Content-Type': 'application/json', ...CORS } });
+    }
 
     try {
       let response;
-      
+
       if (path === '/api/upload' && request.method === 'POST') {
-        response = await handleUpload(request);
+        response = await handleUpload(request, kv);
       } else if (path === '/api/analyze' && request.method === 'POST') {
-        response = await handleAnalyze(request);
+        response = await handleAnalyze(request, apiKey, kv);
       } else if (path === '/api/optimize' && request.method === 'POST') {
-        response = await handleOptimize(request);
+        response = await handleOptimize(request, apiKey, kv);
       } else if (path === '/api/payment/create' && request.method === 'POST') {
-        response = await handleCreateOrder(request);
+        response = await handleCreateOrder(request, kv);
       } else if (path === '/api/payment/status' && request.method === 'GET') {
-        response = await handlePaymentStatus(request);
+        response = await handlePaymentStatus(request, kv);
       } else if (path === '/payment/simulate' && request.method === 'GET') {
-        response = await handleSimulatePayment(request);
+        response = await handleSimulatePayment(request, kv);
+      } else if (path === '/api/user/resumes' && request.method === 'GET') {
+        response = await handleUserResumes(request, kv);
+      } else if (path === '/api/user/orders' && request.method === 'GET') {
+        response = await handleUserOrders(request, kv);
+      } else if (path === '/api/user/stats' && request.method === 'GET') {
+        response = await handleUserStats(request, kv);
       } else if (path === '/api/health') {
-        response = new Response(JSON.stringify({ status: 'ok', version: '1.1' }), {
+        response = new Response(JSON.stringify({ status: 'ok', version: '2.0' }), {
           headers: { 'Content-Type': 'application/json', ...CORS }
         });
       } else {
@@ -558,14 +656,9 @@ export default {
         });
       }
 
-      // 添加 CORS 头
       const newHeaders = new Headers(response.headers);
       Object.entries(CORS).forEach(([k, v]) => newHeaders.set(k, v));
-      
-      return new Response(response.body, {
-        status: response.status,
-        headers: newHeaders
-      });
+      return new Response(response.body, { status: response.status, headers: newHeaders });
     } catch (e) {
       return new Response(JSON.stringify({ error: e.message }), {
         status: 500,

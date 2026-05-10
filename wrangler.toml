@@ -1,10 +1,12 @@
 name = "offergo-api"
-main = "worker.js"
+main = "backend/worker.js"
 compatibility_date = "2024-01-01"
 
-# Cloudflare Workers 免费计划限制
-# KV 命名空间（可选，用于生产环境存储）
-# kv_namespaces = [{ binding = "RESUME_CACHE", id = "your-kv-id" }]
+# KV 持久化存储
+[[kv_namespaces]]
+binding = "OFFERGO_DATA"
+id = "e3423b0b7c5b4c19a90b250238f4660f"
+preview_id = "7dd5ff4eceb14ce18e0d7871cfe93a7d"
 
 # 环境变量（在 Cloudflare Dashboard 中设置更安全）
 [vars]
