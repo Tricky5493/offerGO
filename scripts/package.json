@@ -1,0 +1,9 @@
+{
+  "name": "crypto-news-script",
+  "version": "1.0.0",
+  "description": "Daily crypto news and price tracker",
+  "main": "crypto-news.js",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}
